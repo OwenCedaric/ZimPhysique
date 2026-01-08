@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZimPhysique Training</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                        },
+                        accent: {
+                            DEFAULT: '#f59e0b', // Amber 500
+                            hover: '#d97706',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-50 text-slate-900 min-h-screen font-sans antialiased pb-20">
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full bg-white/95 backdrop-blur z-50 border-b border-gray-200 shadow-sm">
+        <div class="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
+            <h1 class="text-xl font-bold tracking-tight text-slate-900 cursor-pointer" onclick="app.goHome()">
+                Zim<span class="text-accent">Physique</span>
+            </h1>
+            <div id="header-actions" class="flex gap-4">
+                <!-- Actions injected via JS -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="app-container" class="max-w-md mx-auto px-4 pt-20">
+        <!-- Views rendered here -->
+    </main>
+
+    <!-- Audio for Timer -->
+    <audio id="timer-beep" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"
+        preload="auto"></audio>
+
+    <!-- Scripts -->
+    <script src="workout_data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
