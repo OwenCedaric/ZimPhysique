@@ -1,0 +1,27 @@
+{
+    "name": "zim",
+    "version": "1.0.0",
+    "description": "This application manages and displays workout plans. It has been updated to use a JSON-based data structure supporting multiple versions and daily breakdowns.",
+    "main": "app.js",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "bugs": {
+        "url": "https://github.com/Cedaric/ZimPhysique/issues"
+    },
+    "homepage": "https://github.com/Cedaric/ZimPhysique#readme",
+    "devDependencies": {
+        "@tailwindcss/postcss": "^4.1.18",
+        "autoprefixer": "^10.4.23",
+        "postcss": "^8.5.6",
+        "tailwindcss": "^4.1.18",
+        "vite": "^7.3.1",
+        "vite-plugin-pwa": "^1.2.0"
+    },
+    "dependencies": {
+        "remixicon": "^4.8.0"
+    }
+}

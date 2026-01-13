@@ -3,39 +3,21 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>ZimPhysique Training</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        slate: {
-                            900: '#0f172a',
-                            800: '#1e293b',
-                            700: '#334155',
-                        },
-                        accent: {
-                            DEFAULT: '#f59e0b', // Amber 500
-                            hover: '#d97706',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <meta name="theme-color" content="#f59e0b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 
 <body class="bg-gray-50 text-slate-900 min-h-screen font-sans antialiased pb-20">
 
     <!-- Header -->
-    <header class="fixed top-0 w-full bg-white/95 backdrop-blur z-50 border-b border-gray-200 shadow-sm">
+    <header class="fixed top-0 w-full bg-white/95 backdrop-blur z-50 border-b border-gray-200 shadow-sm safe-area-top">
         <div class="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
             <h1 class="text-xl font-bold tracking-tight text-slate-900 cursor-pointer" onclick="app.goHome()">
                 Zim<span class="text-accent">Physique</span>
@@ -47,7 +29,7 @@
     </header>
 
     <!-- Main Content -->
-    <main id="app-container" class="max-w-md mx-auto px-4 pt-20">
+    <main id="app-container" class="max-w-md mx-auto px-4 pt-20 safe-area-bottom">
         <!-- Views rendered here -->
     </main>
 
@@ -56,8 +38,12 @@
         preload="auto"></audio>
 
     <!-- Scripts -->
-    <script src="workout_data.js?v=3"></script>
-    <script src="app.js"></script>
+    <script type="module" src="./app.js"></script>
+    <script>
+        // PWA Plugin handles SW registration automatically but we can keep minimal logic if desired
+        // For now, removing manual registration as vite-plugin-pwa usually injects its own logic
+        // or we rely on the plugin's virtual module in app.js
+    </script>
 </body>
 
 </html>
