@@ -45,6 +45,7 @@ The app scans `data/*.json`. It parses filenames to determine the **Day** and **
 Examples:
 *   `monday_v1.json` -> Day: Monday, Version: 1
 *   `upper_v2.json` -> Day: Upper, Version: 2
+*   `daily_v1.json` -> **Special**: "Daily Posture Correction" routine (always pinned to top)
 
 ### Adding a New Version
 To add a new workout plan or version, **simply create a new JSON file**:

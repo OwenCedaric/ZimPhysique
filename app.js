@@ -332,7 +332,14 @@ const app = {
 
                 <div class="space-y-8">
                     ${app.renderSection(app.t('warmUp'), planData.sections.warmup, dayKey)}
-                    ${app.renderSection(app.t('strength'), planData.sections.strength, dayKey)}
+                    
+                    ${/* Dynamic Section Title based on Plan Type */ ''}
+                    ${app.renderSection(
+            planData.type === 'daily_correction' ? app.t('posture') : app.t('strength'),
+            planData.sections.strength,
+            dayKey
+        )}
+                    
                     ${app.renderSection(app.t('stretch'), planData.sections.stretch, dayKey)}
                 </div>
                 

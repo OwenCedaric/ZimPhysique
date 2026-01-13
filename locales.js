@@ -29,7 +29,8 @@ export const translations = {
             friday: "Friday",
             saturday: "Saturday",
             sunday: "Sunday"
-        }
+        },
+        posture: "Posture Correction"
     },
     cn: {
         todayTarget: "今日目标",
@@ -61,6 +62,7 @@ export const translations = {
             friday: "周五",
             saturday: "周六",
             sunday: "周日"
-        }
+        },
+        posture: "体态矫正"
     }
 };
