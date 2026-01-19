@@ -321,6 +321,43 @@ const app = {
 
         if (!planData) return;
 
+        // Dynamic Section Rendering
+        // Prioritize standard sections, then render others
+        const standardSections = ['warmup', 'strength', 'stretch'];
+        const allKeys = Object.keys(planData.sections);
+
+        // Filter out standard keys that exist
+        const presentStandardKeys = standardSections.filter(k => allKeys.includes(k));
+        // Get remaining keys (e.g. circuit_1, etc.)
+        const otherKeys = allKeys.filter(k => !standardSections.includes(k)).sort();
+
+        // Combine order
+        const orderedKeys = [...presentStandardKeys, ...otherKeys];
+
+        const renderSectionsHTML = orderedKeys.map(key => {
+            const exercises = planData.sections[key];
+            let title = key;
+            // Try to use translation for standard keys
+            if (standardSections.includes(key)) {
+                // Map to existing translation keys if possible
+                if (key === 'warmup') title = app.t('warmUp');
+                else if (key === 'strength') title = planData.type === 'daily_correction' ? app.t('posture') : app.t('strength');
+                else if (key === 'stretch') title = app.t('stretch');
+            } else {
+                // Format custom keys: circuit_1_pelvic_correction -> Circuit 1 Pelvic Correction
+                // Remove underscores, Capitalize first letters
+                title = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                // Optional: Translate 'Circuit' if we want, but English is fine or simple mapping
+                // If it starts with 'circuit', we could make it cleaner
+                if (key.startsWith('circuit')) {
+                    // Try to make it look a bit better? 
+                    // e.g. "circuit_1_pelvic..." -> "Circuit 1: Pelvic..."
+                    title = title.replace(/Circuit (\d+) (.*)/, 'Circuit $1: $2');
+                }
+            }
+            return app.renderSection(title, exercises, dayKey);
+        }).join('');
+
         const html = `
             <div class="pb-24">
                 <div class="mb-6">
@@ -328,19 +365,21 @@ const app = {
                     <div class="flex items-center gap-3 mt-2">
                          ${renderVersionSelector()}
                     </div>
+                     ${planData.execution_notes ? `
+                        <div class="mt-4 p-4 bg-yellow-50 border border-yellow-100 rounded-lg text-sm text-yellow-800">
+                             <div class="font-bold flex items-center gap-2 mb-2">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span>${app.t('technique') || 'Notes'}</span>
+                             </div>
+                             <div class="space-y-1">
+                                ${Object.entries(planData.execution_notes).map(([k, v]) => `<div><span class="font-semibold opacity-75">${k.replace(/_/g, ' ')}:</span> ${v}</div>`).join('')}
+                             </div>
+                        </div>
+                     ` : ''}
                 </div>
 
                 <div class="space-y-8">
-                    ${app.renderSection(app.t('warmUp'), planData.sections.warmup, dayKey)}
-                    
-                    ${/* Dynamic Section Title based on Plan Type */ ''}
-                    ${app.renderSection(
-            planData.type === 'daily_correction' ? app.t('posture') : app.t('strength'),
-            planData.sections.strength,
-            dayKey
-        )}
-                    
-                    ${app.renderSection(app.t('stretch'), planData.sections.stretch, dayKey)}
+                    ${renderSectionsHTML}
                 </div>
                 
                 <div class="mt-8 p-4 bg-slate-100 rounded-lg text-center border border-slate-200">
@@ -376,12 +415,19 @@ const app = {
         // using index is risky if we have split arrays. 
         // Let's use ex.id as the primary key suffix for DOM elements. 
         // Ensure ex.id is safe string.
-        const safeId = ex.id.replace(/[^a-zA-Z0-9-_]/g, '');
+        // If ex.id is missing (daily_v1 might not have strict IDs?), generate one?
+        // daily_v1 does not have IDs for exercises! "name": "...", "duration": "..."
+        // So we MUST generate a safe ID. Using sectionTitle + Index is better in that case.
+
+        let safeId = ex.id ? ex.id.replace(/[^a-zA-Z0-9-_]/g, '') : null;
+        if (!safeId) {
+            safeId = `${sectionTitle}-${index}`.replace(/[^a-zA-Z0-9-_]/g, '-').toLowerCase();
+        }
 
         // Extract rest time number
         let restTime = 60;
         let restText = "60s";
-        if (ex.rest) {
+        if (ex.rest && ex.rest !== "N/A") {
             const match = ex.rest.match(/(\d+)/);
             if (match) {
                 restTime = parseInt(match[1]);
@@ -390,6 +436,33 @@ const app = {
         }
 
         const restLabel = app.state.lang === 'cn' ? '休息: ' : 'Rest: ';
+
+        // Handle sets_reps vs duration
+        const metaDuration = ex.sets_reps || ex.duration || '';
+
+        // Handle technique_notes
+        let structuredNotes = '';
+        if (ex.technique_notes) {
+            // Parse 【Title】Content
+            // Splitting by 【
+            const parts = ex.technique_notes.split(/【/);
+            // parts[0] might be empty or intro text.
+            structuredNotes = parts.map((part, i) => {
+                if (!part.trim()) return '';
+                if (part.includes('】')) {
+                    const [title, content] = part.split('】');
+                    return `
+                        <div class="mb-3 last:mb-0">
+                            <span class="font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded text-xs">${title}</span>
+                            <span class="text-slate-600 text-sm block mt-1 leading-relaxed">${content}</span>
+                        </div>
+                     `;
+                } else {
+                    // Plain text without brackets (e.g. at start)
+                    return `<div class="mb-2 text-slate-600 text-sm">${part}</div>`;
+                }
+            }).join('');
+        }
 
         return `
         <div class="bg-white border border-slate-200 rounded-xl overflow-hidden exercise-card shadow-sm transition-shadow hover:shadow-md">
@@ -403,10 +476,10 @@ const app = {
                     <div class="flex flex-wrap gap-2 mt-2">
                         ${ex.target ? `<span class="px-2 py-0.5 rounded bg-slate-100 text-slate-500 text-xs border border-slate-200">${ex.target}</span>` : ''}
                         ${ex.tempo ? `<span class="px-2 py-0.5 rounded bg-slate-100 text-slate-500 text-xs border border-slate-200">Tempo: ${ex.tempo}</span>` : ''}
-                        ${ex.rest ? `<span class="px-2 py-0.5 rounded bg-blue-50 text-blue-600 text-xs border border-blue-100 font-bold flex items-center gap-1"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>${restLabel}${ex.rest}</span>` : ''}
+                        ${(ex.rest && ex.rest !== "N/A") ? `<span class="px-2 py-0.5 rounded bg-blue-50 text-blue-600 text-xs border border-blue-100 font-bold flex items-center gap-1"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>${restLabel}${ex.rest}</span>` : ''}
                     </div>
                     <div class="mt-2 text-accent font-medium text-sm flex items-center justify-between">
-                        <span>${ex.sets_reps}</span>
+                        <span>${metaDuration}</span>
                         <div class="flex items-center gap-1 text-slate-400 text-xs">
                             <span id="btn-text-${safeId}">${app.t('showDetails')}</span>
                             <svg id="icon-${safeId}" class="w-4 h-4 transition-transform duration-300 transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
@@ -424,6 +497,12 @@ const app = {
                     ${safe(ex.setup).length > 0 ? `
                         <div class="mb-4 p-3 bg-white border border-slate-200 rounded text-xs text-slate-600 font-mono leading-relaxed shadow-sm">
                             ${ex.setup.map(s => `<div>${s}</div>`).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    ${structuredNotes ? `
+                        <div class="mb-4 border-l-2 border-accent/20 pl-3">
+                            ${structuredNotes}
                         </div>
                     ` : ''}
 
@@ -460,17 +539,19 @@ const app = {
                 <div class="grid grid-cols-2 gap-3 mb-3">
                     <div>
                         <label class="block text-xs text-slate-400 mb-1 font-bold">${app.t('weight')}</label>
-                        <input type="number" id="weight-${safeId}" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-800 text-sm font-bold focus:border-accent focus:bg-white focus:outline-none transition-colors" placeholder="0" onblur="app.saveData('${dayKey}', '${ex.id}', 'weight', this.value)">
+                        <input type="number" id="weight-${safeId}" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-800 text-sm font-bold focus:border-accent focus:bg-white focus:outline-none transition-colors" placeholder="0" onblur="app.saveData('${dayKey}', '${safeId}', 'weight', this.value)">
                     </div>
                     <div>
                         <label class="block text-xs text-slate-400 mb-1 font-bold">${app.t('reps')}</label>
-                        <input type="number" id="reps-${safeId}" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-800 text-sm font-bold focus:border-accent focus:bg-white focus:outline-none transition-colors" placeholder="0" onblur="app.saveData('${dayKey}', '${ex.id}', 'reps', this.value)">
+                        <input type="number" id="reps-${safeId}" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-800 text-sm font-bold focus:border-accent focus:bg-white focus:outline-none transition-colors" placeholder="0" onblur="app.saveData('${dayKey}', '${safeId}', 'reps', this.value)">
                     </div>
                 </div>
+                ${(ex.rest && ex.rest !== "N/A") ? `
                 <button onclick="app.startTimer(this, ${restTime})" class="cursor-pointer w-full py-2.5 rounded-lg border border-slate-200 text-slate-500 text-sm font-bold hover:bg-slate-50 hover:text-slate-700 transition-colors flex items-center justify-center gap-2 bg-slate-50/50">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     ${app.t('restTimer')} (${restText})
                 </button>
+                ` : ''}
             </div>
         </div>
         `;
