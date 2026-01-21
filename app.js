@@ -387,7 +387,7 @@ const app = {
                                     ${app.t('strategicImportance')}
                                 </h4>
                             </div>
-                            <div class="p-5 pt-0 overflow-y-auto leading-relaxed text-sm text-slate-600">
+                            <div class="p-5 pt-0 overflow-y-auto leading-relaxed text-sm text-slate-600 no-scrollbar">
                                 ${planData.strategic_importance}
                             </div>
                         </div>
@@ -401,7 +401,7 @@ const app = {
                                     ${app.t('corePrinciple')}
                                 </h4>
                             </div>
-                            <div class="p-5 pt-0 overflow-y-auto leading-relaxed text-sm text-slate-600">
+                            <div class="p-5 pt-0 overflow-y-auto leading-relaxed text-sm text-slate-600 no-scrollbar">
                                 ${planData.core_principle}
                             </div>
                         </div>
@@ -415,7 +415,7 @@ const app = {
                                     ${app.t('dietarySuggestions')}
                                 </h4>
                             </div>
-                            <div class="p-5 pt-0 overflow-y-auto leading-relaxed text-sm text-slate-600">
+                            <div class="p-5 pt-0 overflow-y-auto leading-relaxed text-sm text-slate-600 no-scrollbar">
                                 <p>${planData.dietary_suggestions || planData.diet}</p>
                             </div>
                         </div>
@@ -429,7 +429,7 @@ const app = {
                                     ${app.t('nutritionTiming')}
                                 </h4>
                             </div>
-                            <div class="p-5 pt-0 overflow-y-auto">
+                            <div class="p-5 pt-0 overflow-y-auto no-scrollbar">
                                 <ul class="text-sm text-slate-600 leading-relaxed space-y-2">
                                     ${Object.entries(planData.nutrition_timing).map(([k, v]) => {
             const label = k === 'pre_workout' ? 'Pre' :
@@ -489,7 +489,7 @@ const app = {
                                 ${title}
                             </h4>
                         </div>
-                        <div class="p-5 pt-0 overflow-y-auto text-sm text-slate-600 leading-relaxed space-y-3">
+                        <div class="p-5 pt-0 overflow-y-auto text-sm text-slate-600 leading-relaxed space-y-3 no-scrollbar">
                             <ul class="space-y-3">
                                 ${Object.entries(data).map(([k, v]) => `
                                     <li>
