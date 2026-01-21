@@ -1,7 +1,7 @@
 {
     "id": "module_d_core_sculpting_active_recovery_v1",
     "version": 1,
-    "title": "模块 D：核心雕刻 + 主动恢复日（周三）",
+    "title": "模块 D：核心雕刻 + 主动恢复",
     "type": "core_training_active_recovery",
     "target_ratio": "下腹 60% | 上腹 40% | 抗旋转/侧屈 补充",
     "duration": "45 分钟",

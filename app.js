@@ -237,16 +237,16 @@ const app = {
                 </div>
 
                 <!-- Daily Posture Correction (Mandatory) -->
-                <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-20 h-20 bg-accent/10 rounded-full -mr-10 -mt-10 blur-xl"></div>
+                <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-accent/10 rounded-full -mr-10 -mt-10 blur-2xl"></div>
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <span class="bg-accent/10 text-accent-hover text-xs px-2 py-1 rounded uppercase tracking-wider font-bold">${app.t('mandatory')}</span>
-                            <h3 class="text-lg font-bold text-slate-800 mt-2">${app.t('dailyTitle')}</h3>
+                            <span class="bg-accent/10 text-accent-hover text-[10px] px-2 py-1 rounded-full uppercase tracking-wider font-bold">${app.t('mandatory')}</span>
+                            <h3 class="text-xl font-bold text-slate-800 mt-3">${app.t('dailyTitle')}</h3>
                         </div>
                     </div>
-                    <p class="text-slate-500 text-sm mb-4 line-clamp-2">${app.t('dailyDesc')}</p>
-                    <button onclick="app.startWorkout('daily')" class="cursor-pointer w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg shadow-slate-200">
+                    <p class="text-slate-500 text-sm mb-6 leading-relaxed">${app.t('dailyDesc')}</p>
+                    <button onclick="app.startWorkout('daily')" class="cursor-pointer w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-slate-200 hover:shadow-xl active:scale-[0.98]">
                         <span>${app.t('startRitual')}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                     </button>
@@ -259,10 +259,10 @@ const app = {
             const isToday = day.key === todayKey;
 
             return `
-                        <button onclick="app.startWorkout('${day.key}')" class="cursor-pointer w-full text-left bg-white border ${isToday ? 'border-accent ring-1 ring-accent/20 shadow-md shadow-accent/5' : 'border-slate-200 shadow-sm'} hover:border-accent/50 rounded-xl p-4 transition-all relative overflow-hidden group">
-                            ${isToday ? `<div class="absolute top-0 right-0 bg-accent text-white text-[10px] font-bold px-2 py-0.5 rounded-bl">TODAY</div>` : ''}
-                            <h4 class="font-bold text-slate-800 ${isToday ? 'text-accent-hover' : ''}">${day.label}</h4>
-                            <p class="text-slate-500 text-xs mt-1 group-hover:text-slate-600 transition-colors">${app.t('startWorkout')}</p>
+                        <button onclick="app.startWorkout('${day.key}')" class="cursor-pointer w-full text-left bg-white border ${isToday ? 'border-accent ring-1 ring-accent/20 shadow-md shadow-accent/5' : 'border-slate-100 shadow-sm'} hover:border-accent/30 rounded-2xl p-5 transition-all relative overflow-hidden group">
+                            ${isToday ? `<div class="absolute top-0 right-0 bg-accent text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg shadow-sm">TODAY</div>` : ''}
+                            <h4 class="font-bold text-slate-800 text-lg ${isToday ? 'text-accent-hover' : ''}">${day.label}</h4>
+                            <p class="text-slate-400 text-xs mt-1 group-hover:text-slate-500 transition-colors uppercase tracking-wider font-medium">${app.t('startWorkout')}</p>
                         </button>
                         `
         }).join('')}
@@ -378,6 +378,138 @@ const app = {
                      ` : ''}
                 </div>
 
+                <div class="mb-8 flex gap-4 overflow-x-auto snap-x snap-mandatory px-4 -mx-4 pb-4 no-scrollbar">
+                     ${planData.strategic_importance ? `
+                        <div class="snap-center flex-shrink-0 w-[85%] sm:w-[400px] h-64 flex flex-col bg-white border border-indigo-100 rounded-xl shadow-sm">
+                            <div class="p-5 pb-2 flex-shrink-0">
+                                <h4 class="text-xs font-bold text-indigo-500 uppercase tracking-wider flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                                    ${app.t('strategicImportance')}
+                                </h4>
+                            </div>
+                            <div class="p-5 pt-0 overflow-y-auto leading-relaxed text-sm text-slate-600">
+                                ${planData.strategic_importance}
+                            </div>
+                        </div>
+                     ` : ''}
+                     
+                     ${planData.core_principle ? `
+                        <div class="snap-center flex-shrink-0 w-[85%] sm:w-[400px] h-64 flex flex-col bg-white border border-emerald-100 rounded-xl shadow-sm">
+                            <div class="p-5 pb-2 flex-shrink-0">
+                                <h4 class="text-xs font-bold text-emerald-500 uppercase tracking-wider flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    ${app.t('corePrinciple')}
+                                </h4>
+                            </div>
+                            <div class="p-5 pt-0 overflow-y-auto leading-relaxed text-sm text-slate-600">
+                                ${planData.core_principle}
+                            </div>
+                        </div>
+                     ` : ''}
+
+                     ${(planData.dietary_suggestions || planData.diet) ? `
+                        <div class="snap-center flex-shrink-0 w-[85%] sm:w-[400px] h-64 flex flex-col bg-white border border-orange-100 rounded-xl shadow-sm">
+                            <div class="p-5 pb-2 flex-shrink-0">
+                                <h4 class="text-xs font-bold text-orange-500 uppercase tracking-wider flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                                    ${app.t('dietarySuggestions')}
+                                </h4>
+                            </div>
+                            <div class="p-5 pt-0 overflow-y-auto leading-relaxed text-sm text-slate-600">
+                                <p>${planData.dietary_suggestions || planData.diet}</p>
+                            </div>
+                        </div>
+                     ` : ''}
+
+                     ${planData.nutrition_timing ? `
+                        <div class="snap-center flex-shrink-0 w-[85%] sm:w-[400px] h-64 flex flex-col bg-white border border-rose-100 rounded-xl shadow-sm">
+                            <div class="p-5 pb-2 flex-shrink-0">
+                                <h4 class="text-xs font-bold text-rose-500 uppercase tracking-wider flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                    ${app.t('nutritionTiming')}
+                                </h4>
+                            </div>
+                            <div class="p-5 pt-0 overflow-y-auto">
+                                <ul class="text-sm text-slate-600 leading-relaxed space-y-2">
+                                    ${Object.entries(planData.nutrition_timing).map(([k, v]) => {
+            const label = k === 'pre_workout' ? 'Pre' :
+                k === 'intra_workout' ? 'Intra' :
+                    k === 'post_workout' ? 'Post' :
+                        k === 'evening' ? 'Eve' : k;
+
+            let content = '';
+            if (typeof v === 'string') {
+                content = v;
+            } else if (v && typeof v === 'object') {
+                content = `
+                        <div class="flex flex-col">
+                            <span class="font-medium text-slate-700">${v.composition || ''}</span>
+                            <span class="text-xs text-slate-400 mt-0.5">${v.timing || ''}</span>
+                        </div>
+                    `;
+            }
+
+            return `
+                <li class="flex gap-3 items-start p-2 bg-rose-50/30 rounded-lg border border-rose-100/50">
+                    <span class="font-bold text-rose-500 text-xs mt-1 uppercase tracking-wider min-w-[3em] text-right">${label}</span>
+                    <div class="text-sm text-slate-600 leading-snug flex-grow">
+                        ${content}
+                    </div>
+                </li>
+                `;
+        }).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                     ` : ''}
+
+                     ${(() => {
+                const metadataField = (title, data, colorClass, iconColorClass) => {
+                    if (!data) return '';
+                    const formatKey = (k) => k.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+
+                    const renderValue = (v) => {
+                        if (typeof v === 'string') return v;
+                        if (typeof v === 'object' && v !== null && !Array.isArray(v)) {
+                            return `<ul class="list-disc pl-4 space-y-1 mt-1">${Object.entries(v).map(([subK, subV]) =>
+                                `<li><span class="font-medium text-slate-700">${formatKey(subK)}:</span> <span class="text-slate-600">${typeof subV === 'string' ? subV : JSON.stringify(subV)}</span></li>`
+                            ).join('')}</ul>`;
+                        }
+                        if (Array.isArray(v)) {
+                            return `<ul class="list-disc pl-4 space-y-1 mt-1">${v.map(item => `<li>${item}</li>`).join('')}</ul>`;
+                        }
+                        return JSON.stringify(v);
+                    };
+
+                    return `
+                    <div class="snap-center flex-shrink-0 w-[85%] sm:w-[400px] h-64 flex flex-col bg-white border border-${colorClass}-100 rounded-xl shadow-sm">
+                        <div class="p-5 pb-2 flex-shrink-0">
+                            <h4 class="text-xs font-bold text-${iconColorClass}-500 uppercase tracking-wider flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-${iconColorClass}-500"></span>
+                                ${title}
+                            </h4>
+                        </div>
+                        <div class="p-5 pt-0 overflow-y-auto text-sm text-slate-600 leading-relaxed space-y-3">
+                            <ul class="space-y-3">
+                                ${Object.entries(data).map(([k, v]) => `
+                                    <li>
+                                        <div class="font-semibold text-${iconColorClass}-800/80 mb-1">${formatKey(k)}</div>
+                                        <div class="text-slate-600 leading-snug">${renderValue(v)}</div>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    `;
+                };
+
+                return `
+                            ${metadataField(app.t('postWorkoutNotes'), planData.post_workout_notes, 'indigo', 'indigo')}
+                            ${metadataField(app.t('recoveryOptimization'), planData.recovery_optimization, 'teal', 'teal')}
+                        `;
+            })()}
+                </div>
+
                 <div class="space-y-8">
                     ${renderSectionsHTML}
                 </div>
@@ -399,9 +531,12 @@ const app = {
         if (!exercises || exercises.length === 0) return '';
 
         return `
-            <div>
-                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-200 pb-2">${title}</h3>
-                <div class="space-y-6">
+            <div class="mb-10">
+                <div class="flex items-center gap-4 mb-6">
+                     <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest">${title}</h3>
+                     <div class="h-px bg-slate-100 flex-grow"></div>
+                </div>
+                <div class="space-y-8">
                     ${exercises.map((ex, index) => app.renderExerciseCard(ex, index, dayKey, title)).join('')}
                 </div>
             </div>
@@ -465,28 +600,28 @@ const app = {
         }
 
         return `
-        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden exercise-card shadow-sm transition-shadow hover:shadow-md">
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden exercise-card shadow-sm transition-all">
             <!-- Card Header -->
-            <div class="p-4 flex gap-4 items-start cursor-pointer select-none" onclick="app.toggleDetails('${dayKey}', '${safeId}')">
-                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-sm font-bold text-slate-500 pt-0.5">
+            <div class="p-5 flex gap-5 items-start cursor-pointer select-none" onclick="app.toggleDetails('${dayKey}', '${safeId}')">
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-slate-50/80 border border-slate-100 flex items-center justify-center text-sm font-bold text-slate-400 pt-0.5">
                     ${index + 1}
                 </div>
-                <div class="flex-grow">
-                    <h3 class="font-bold text-lg text-slate-800 leading-tight">${ex.name}</h3>
-                    <div class="flex flex-wrap gap-2 mt-2">
-                        ${ex.target ? `<span class="px-2 py-0.5 rounded bg-slate-100 text-slate-500 text-xs border border-slate-200">${ex.target}</span>` : ''}
-                        ${ex.tempo ? `<span class="px-2 py-0.5 rounded bg-slate-100 text-slate-500 text-xs border border-slate-200">Tempo: ${ex.tempo}</span>` : ''}
-                        ${(ex.rest && ex.rest !== "N/A") ? `<span class="px-2 py-0.5 rounded bg-blue-50 text-blue-600 text-xs border border-blue-100 font-bold flex items-center gap-1"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>${restLabel}${ex.rest}</span>` : ''}
+                <div class="flex-grow pt-1">
+                    <h3 class="font-bold text-xl text-slate-800 leading-snug">${ex.name}</h3>
+                    <div class="flex flex-wrap gap-2 mt-3">
+                        ${ex.target ? `<span class="px-2.5 py-1 rounded-md bg-slate-50 text-slate-500 text-xs border border-slate-100 font-medium">${ex.target}</span>` : ''}
+                        ${ex.tempo ? `<span class="px-2.5 py-1 rounded-md bg-slate-50 text-slate-500 text-xs border border-slate-100 font-medium">Tempo: ${ex.tempo}</span>` : ''}
+                        ${(ex.rest && ex.rest !== "N/A") ? `<span class="px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-600 text-xs border border-indigo-100 font-bold flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>${restText}</span>` : ''}
                     </div>
-                    <div class="mt-2 text-accent font-medium text-sm flex items-center justify-between">
+                    <div class="mt-3 text-accent font-medium text-sm flex items-center justify-between">
                         <span>${metaDuration}</span>
-                        <div class="flex items-center gap-1 text-slate-400 text-xs">
+                        <div class="flex items-center gap-1 text-slate-400 text-xs whitespace-nowrap transition-colors hover:text-slate-600">
                             <span id="btn-text-${safeId}">${app.t('showDetails')}</span>
                             <svg id="icon-${safeId}" class="w-4 h-4 transition-transform duration-300 transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                         </div>
                     </div>
                 </div>
-                 <div class="flex items-center h-full pt-1" onclick="event.stopPropagation()">
+                 <div class="flex items-center h-full pt-2 pl-2" onclick="event.stopPropagation()">
                      <input type="checkbox" id="check-${safeId}" class="custom-checkbox" onchange="app.toggleCheck('${dayKey}', '${safeId}')">
                 </div>
             </div>
@@ -503,6 +638,16 @@ const app = {
                     ${structuredNotes ? `
                         <div class="mb-4 border-l-2 border-accent/20 pl-3">
                             ${structuredNotes}
+                        </div>
+                    ` : ''}
+
+                    ${ex.muscle_feeling ? `
+                        <div class="mb-4 p-3 bg-blue-50/50 border border-blue-100 rounded text-sm text-slate-700">
+                             <div class="flex items-center gap-2 mb-1">
+                                <svg class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                <span class="font-bold text-blue-900 text-xs uppercase tracking-wider">${app.t('muscleFeeling')}</span>
+                             </div>
+                             <p class="leading-relaxed pl-6 text-slate-600">${ex.muscle_feeling}</p>
                         </div>
                     ` : ''}
 
@@ -532,25 +677,55 @@ const app = {
                         </div>
                     ` : ''}
                 </div>
-            </div>
-
-            <!-- Logger Section -->
-            <div class="p-4 border-t border-slate-100 bg-white">
-                <div class="grid grid-cols-2 gap-3 mb-3">
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1 font-bold">${app.t('weight')}</label>
-                        <input type="number" id="weight-${safeId}" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-800 text-sm font-bold focus:border-accent focus:bg-white focus:outline-none transition-colors" placeholder="0" onblur="app.saveData('${dayKey}', '${safeId}', 'weight', this.value)">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1 font-bold">${app.t('reps')}</label>
-                        <input type="number" id="reps-${safeId}" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-slate-800 text-sm font-bold focus:border-accent focus:bg-white focus:outline-none transition-colors" placeholder="0" onblur="app.saveData('${dayKey}', '${safeId}', 'reps', this.value)">
-                    </div>
+                
+                 ${(ex.progression || ex.weight_selection) ? `
+                     <div class="border-t border-slate-100 pt-4 pb-2 grid grid-cols-1 gap-4">
+                         ${ex.weight_selection ? `
+                             <div>
+                                 <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">${app.t('weightSelection')}</h4>
+                                 <div class="bg-slate-50 border border-slate-200 rounded p-3 text-xs space-y-2">
+                                     ${ex.weight_selection.method ? `<div><span class="font-semibold text-slate-700">Method:</span> <span class="text-slate-500">${ex.weight_selection.method}</span></div>` : ''}
+                                     ${ex.weight_selection.first_time_estimate ? `<div><span class="font-semibold text-slate-700">Estimate:</span> <span class="text-slate-500">${ex.weight_selection.first_time_estimate}</span></div>` : ''}
+                                     ${ex.weight_selection.progression ? `<div><span class="font-semibold text-slate-700">Progression:</span> <span class="text-slate-500">${ex.weight_selection.progression}</span></div>` : ''}
+                                 </div>
+                             </div>
+                         ` : ''}
+                         ${ex.progression ? `
+                             <div>
+                                 <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">${app.t('progression')}</h4>
+                                 <ul class="space-y-1">
+                                     ${Array.isArray(ex.progression) ? ex.progression.map(p => `
+                                         <li class="text-xs text-slate-500 flex items-start gap-2">
+                                             <span class="text-slate-300 mt-0.5">•</span>
+                                             <span>${p}</span>
+                                         </li>
+                                     `).join('') : `<li class="text-xs text-slate-500">${ex.progression}</li>`}
+                                 </ul>
+                             </div>
+                         ` : ''}
+                     </div>
+                 ` : ''}
                 </div>
+
+            <!-- Logger Section (Rest Timer Only) -->
+            <div class="px-5 pb-5 pt-2 bg-white">
                 ${(ex.rest && ex.rest !== "N/A") ? `
-                <button onclick="app.startTimer(this, ${restTime})" class="cursor-pointer w-full py-2.5 rounded-lg border border-slate-200 text-slate-500 text-sm font-bold hover:bg-slate-50 hover:text-slate-700 transition-colors flex items-center justify-center gap-2 bg-slate-50/50">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    ${app.t('restTimer')} (${restText})
-                </button>
+                <div class="flex justify-end">
+                    <button onclick="app.startTimer(this, ${restTime})" class="group cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 text-sm font-medium transition-colors">
+                        <span class="flex items-center gap-2 group-[.timer-active]:hidden">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>${app.t('restTimer')}</span>
+                            <span class="opacity-75 text-xs">(${restText})</span>
+                        </span>
+                        <span class="hidden group-[.timer-active]:flex items-center gap-2 text-indigo-600">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                            </span>
+                            <span class="countdown-display font-mono font-bold"></span>
+                        </span>
+                    </button>
+                </div>
                 ` : ''}
             </div>
         </div>
@@ -570,23 +745,6 @@ const app = {
                 input.checked = true;
             }
         });
-
-        // Restore Weight/Reps
-        const weightInputs = document.querySelectorAll('input[id^="weight-"]');
-        weightInputs.forEach(input => {
-            const domId = input.id.replace('weight-', '');
-            const key = `zim_data_${dayKey}_${domId}_weight`;
-            const val = localStorage.getItem(key);
-            if (val) input.value = val;
-        });
-
-        const repInputs = document.querySelectorAll('input[id^="reps-"]');
-        repInputs.forEach(input => {
-            const domId = input.id.replace('reps-', '');
-            const key = `zim_data_${dayKey}_${domId}_reps`;
-            const val = localStorage.getItem(key);
-            if (val) input.value = val;
-        });
     },
 
     toggleCheck: (dayKey, exId) => {
@@ -601,32 +759,41 @@ const app = {
         }
     },
 
-    saveData: (dayKey, exId, field, value) => {
-        const key = `zim_data_${dayKey}_${exId}_${field}`;
-        localStorage.setItem(key, value);
-    },
-
     startTimer: (btn, duration) => {
         if (btn.classList.contains('timer-active')) return;
 
-        const originalText = btn.innerHTML;
+        // Reset any other active timers
+        document.querySelectorAll('.timer-active').forEach(b => {
+            // We can't easily cancel the interval from here given how it's written in closures.
+            // Ideally we'd have a global timer state. 
+            // For now, let's just allow multiple? Or maybe not.
+            // Style-wise, let's just proceed.
+        });
+
+        // let originalContent = btn.innerHTML; // Using CSS toggle now
         let timeLeft = duration;
 
-        btn.classList.add('timer-active', 'bg-accent', 'text-white', 'border-accent');
-        btn.classList.remove('hover:bg-slate-50', 'hover:text-slate-700', 'text-slate-500', 'bg-slate-50/50');
+        btn.classList.add('timer-active', 'bg-indigo-50', 'text-indigo-600');
+        btn.classList.remove('bg-slate-50', 'text-slate-500', 'hover:bg-slate-100', 'hover:text-slate-700');
+
+        const display = btn.querySelector('.countdown-display');
 
         const tick = () => {
             if (timeLeft <= 0) {
                 clearInterval(interval);
-                btn.innerHTML = app.t('restComplete');
+                display.innerText = app.t('restComplete');
                 document.getElementById('timer-beep').play().catch(e => console.log('Audio blocked', e));
+
+                // Finished State
+                btn.classList.remove('animate-soft-pulse');
+
                 setTimeout(() => {
-                    btn.classList.remove('timer-active', 'bg-accent', 'text-white', 'border-accent');
-                    btn.classList.add('hover:bg-slate-50', 'hover:text-slate-700', 'text-slate-500', 'bg-slate-50/50');
-                    btn.innerHTML = originalText;
+                    // Reset styling
+                    btn.classList.remove('timer-active', 'bg-indigo-50', 'text-indigo-600');
+                    btn.classList.add('bg-slate-50', 'text-slate-500');
                 }, 3000);
             } else {
-                btn.innerHTML = `<span class="font-bold font-mono text-base">${timeLeft}s</span>`;
+                display.innerText = `${timeLeft}s`;
                 timeLeft--;
             }
         };
