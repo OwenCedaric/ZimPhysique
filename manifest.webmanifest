@@ -3,8 +3,8 @@
     "short_name": "ZimPhysique",
     "start_url": "./index.html",
     "display": "standalone",
-    "background_color": "#f8fafc",
-    "theme_color": "#f59e0b",
+    "background_color": "#fbf9f6",
+    "theme_color": "#82a1b9",
     "orientation": "portrait",
     "icons": [
         {

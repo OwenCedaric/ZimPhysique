@@ -11,7 +11,8 @@ const app = {
         expandedCards: {}, // Stores state of expanded cards per day
         manifest: null, // Loaded from data/manifest.json
         workoutCache: {}, // Cache for loaded workout plans
-        lang: 'cn' // 'cn' or 'en'
+        lang: 'cn', // 'cn' or 'en'
+        activeWorkoutTab: 'training' // 'training', 'recovery', 'strategy'
     },
 
     translations: translations,
@@ -103,8 +104,8 @@ const app = {
         } catch (e) {
             console.error("Failed to load workout data automatically.", e);
             document.getElementById('app-container').innerHTML = `
-                <div class="p-8 text-center text-slate-500">
-                    <h2 class="text-xl font-bold text-red-500 mb-2">Error Loading Data</h2>
+                <div class="p-8 text-center text-ink-secondary">
+                    <h2 class="text-xl font-bold font-serif text-ink mb-2">Error Loading Data</h2>
                     <p>Failed to initialize workout library.</p>
                 </div>
             `;
@@ -130,6 +131,12 @@ const app = {
     goHome: () => {
         app.state.currentView = 'home';
         app.renderHome();
+    },
+
+    switchWorkoutTab: (tabId) => {
+        app.state.activeWorkoutTab = tabId;
+        // Re-render the workout view
+        app.renderWorkout(app.state.activeDay);
     },
 
     startWorkout: async (dayKey, specificFilename = null) => {
@@ -189,7 +196,7 @@ const app = {
 
         // Render Language Toggle in Header
         headerActions.innerHTML = `
-            <button onclick="app.toggleLang()" class="cursor-pointer text-xs font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded transition-colors uppercase">
+            <button onclick="app.toggleLang()" class="cursor-pointer text-xs font-bold text-ink-secondary bg-subtle-fill hover:bg-subtle-border px-3 py-1.5 rounded-xl transition-colors uppercase">
                 ${app.state.lang === 'cn' ? 'EN' : '中文'}
             </button>
         `;
@@ -231,40 +238,41 @@ const app = {
         });
 
         let html = `
-            <div class="space-y-6 pb-10">
+            <div class="space-y-12 pb-10">
                 <!-- Date Header -->
-                <div class="text-center py-4">
-                    <p class="text-slate-500 text-sm uppercase tracking-wider font-semibold">${new Date().toLocaleDateString(app.state.lang === 'cn' ? 'zh-CN' : 'en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
-                    <h2 class="text-2xl font-bold text-slate-800 mt-1">${app.t('todayTarget')}</h2>
+                <div class="text-left py-4">
+                    <p class="text-ink-secondary text-sm uppercase tracking-widest font-semibold">${new Date().toLocaleDateString(app.state.lang === 'cn' ? 'zh-CN' : 'en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+                    <h2 class="text-[28px] leading-[1.2] font-bold font-serif text-ink mt-2">${app.t('todayTarget')}</h2>
                 </div>
 
                 <!-- Daily Posture Correction (Mandatory) -->
-                <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-accent/10 rounded-full -mr-10 -mt-10 blur-2xl"></div>
-                    <div class="flex justify-between items-start mb-4">
+                <div class="bg-surface border border-subtle-border p-6 relative overflow-hidden group rounded-2xl">
+                    <div class="flex justify-between items-start mb-6">
                         <div>
-                            <span class="bg-accent/10 text-accent-hover text-[10px] px-2 py-1 rounded-full uppercase tracking-wider font-bold">${app.t('mandatory')}</span>
-                            <h3 class="text-xl font-bold text-slate-800 mt-3">${app.t('dailyTitle')}</h3>
+                            <span class="text-accent text-[10px] uppercase tracking-wider font-bold border border-subtle-border px-2 py-1 rounded">${app.t('mandatory')}</span>
+                            <h3 class="text-[20px] font-bold font-serif text-ink mt-4">${app.t('dailyTitle')}</h3>
                         </div>
                     </div>
-                    <p class="text-slate-500 text-sm mb-6 leading-relaxed">${app.t('dailyDesc')}</p>
-                    <button onclick="app.startWorkout('daily')" class="cursor-pointer w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-slate-200 hover:shadow-xl active:scale-[0.98]">
+                    <p class="text-ink-secondary text-base mb-8 font-light">${app.t('dailyDesc')}</p>
+                    <button onclick="app.startWorkout('daily')" class="cursor-pointer w-full bg-subtle-fill hover:bg-subtle-border text-ink font-medium py-3.5 transition-all flex items-center justify-center gap-2 active:scale-[0.98] rounded-xl">
                         <span>${app.t('startRitual')}</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-ink-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                     </button>
                 </div>
 
                 <!-- Workouts List -->
-                <div class="space-y-3">
-                    <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider ml-1">${app.t('weeklySchedule')}</h3>
+                <div class="space-y-4">
+                    <h3 class="text-ink-secondary text-xs font-bold uppercase tracking-widest mb-4">${app.t('weeklySchedule')}</h3>
                     ${days.map(day => {
             const isToday = day.key === todayKey;
 
             return `
-                        <button onclick="app.startWorkout('${day.key}')" class="cursor-pointer w-full text-left bg-white border ${isToday ? 'border-accent ring-1 ring-accent/20 shadow-md shadow-accent/5' : 'border-slate-100 shadow-sm'} hover:border-accent/30 rounded-2xl p-5 transition-all relative overflow-hidden group">
-                            ${isToday ? `<div class="absolute top-0 right-0 bg-accent text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg shadow-sm">TODAY</div>` : ''}
-                            <h4 class="font-bold text-slate-800 text-lg ${isToday ? 'text-accent-hover' : ''}">${day.label}</h4>
-                            <p class="text-slate-400 text-xs mt-1 group-hover:text-slate-500 transition-colors uppercase tracking-wider font-medium">${app.t('startWorkout')}</p>
+                        <button onclick="app.startWorkout('${day.key}')" class="cursor-pointer w-full text-left bg-surface border ${isToday ? 'border-stroke-tint' : 'border-subtle-border'} hover:bg-subtle-fill p-5 transition-all relative overflow-hidden group flex justify-between items-center rounded-2xl">
+                            <div>
+                                <h4 class="font-serif font-bold text-ink text-[18px]">${day.label}</h4>
+                                <p class="text-ink-secondary text-xs mt-2 uppercase tracking-wider font-light">${app.t('startWorkout')}</p>
+                            </div>
+                            ${isToday ? `<div class="text-accent text-xs font-bold uppercase tracking-widest">TODAY</div>` : ''}
                         </button>
                         `
         }).join('')}
@@ -286,7 +294,7 @@ const app = {
 
         // Add Language Toggle to headerActions on workout view too
         headerActions.innerHTML = `
-             <button onclick="app.toggleLang()" class="cursor-pointer text-xs font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded transition-colors uppercase">
+             <button onclick="app.toggleLang()" class="cursor-pointer text-xs font-bold text-ink-secondary bg-subtle-fill hover:bg-subtle-border px-3 py-1.5 rounded transition-colors uppercase">
                 ${app.state.lang === 'cn' ? 'EN' : '中文'}
             </button>
         `;
@@ -294,25 +302,21 @@ const app = {
         // Helper to generate version options
         const renderVersionSelector = () => {
             if (!planConfig || planConfig.files.length <= 1) {
-                return `<span class="bg-slate-100 px-2 py-0.5 rounded text-xs font-mono text-slate-500">v${app.state.activePlanData.version}</span>`;
+                return `<span class="bg-subtle-fill px-2 py-0.5 rounded text-xs font-mono text-ink-secondary border border-subtle-border">v${app.state.activePlanData.version}</span>`;
             }
 
-            // We need to inject the select HTML with an onchange handler matching the filename
             const options = planConfig.files.map(f => {
-                const isSelected = f.filename === app.state.activePlanData.id + '.json' || f.filename.includes(app.state.activePlanData.id); // Loose match on ID
-                // Better match: compare loaded object
                 const cached = app.state.workoutCache[f.filename];
                 const selected = cached === app.state.activePlanData ? 'selected' : '';
-
                 return `<option value="${f.filename}" ${selected}>v${f.version}</option>`;
             }).join('');
 
             return `
                 <div class="relative inline-block">
-                    <select onchange="app.startWorkout('${dayKey}', this.value)" class="appearance-none bg-slate-100 hover:bg-slate-200 text-slate-500 text-xs font-mono py-1 pl-2 pr-6 rounded cursor-pointer outline-none focus:ring-1 focus:ring-accent/50 transition-colors">
+                    <select onchange="app.startWorkout('${dayKey}', this.value)" class="appearance-none bg-subtle-fill hover:bg-subtle-border text-ink-secondary text-xs font-mono py-1 pl-2 pr-6 rounded cursor-pointer outline-none transition-colors border border-subtle-border">
                         ${options}
                     </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 text-slate-400">
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 text-ink-secondary">
                         <svg class="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                     </div>
                 </div>
@@ -323,202 +327,209 @@ const app = {
 
         if (!planData) return;
 
-        // Dynamic Section Rendering
-        // Prioritize standard sections, then render others
-        const standardSections = ['warmup', 'strength', 'stretch'];
+        const currentTab = app.state.activeWorkoutTab || 'training';
+
+        // Tab UI
+        const tabList = [
+            { id: 'training', label: app.state.lang === 'cn' ? '训练' : 'Training' },
+            { id: 'recovery', label: app.state.lang === 'cn' ? '放松' : 'Recovery' },
+            { id: 'strategy', label: app.state.lang === 'cn' ? '理论' : 'Strategy' }
+        ];
+
+        const renderTabsHTML = `
+            <div class="flex items-center gap-8 mb-12 border-b border-subtle-border">
+                ${tabList.map(tab => `
+                    <button onclick="app.switchWorkoutTab('${tab.id}')" 
+                            class="cursor-pointer text-[14px] pb-3 -mb-[1px] uppercase tracking-[0.1em] transition-all ${currentTab === tab.id ? 'font-serif font-bold text-ink border-b-2 border-ink' : 'font-sans text-ink-secondary hover:text-ink border-b-2 border-transparent'}">
+                        ${tab.label}
+                    </button>
+                `).join('')}
+            </div>
+        `;
+
         const allKeys = Object.keys(planData.sections);
+        const recoveryKeys = ['stretch', 'cooldown'];
+        const trainingKeys = allKeys.filter(k => !recoveryKeys.includes(k));
 
-        // Filter out standard keys that exist
-        const presentStandardKeys = standardSections.filter(k => allKeys.includes(k));
-        // Get remaining keys (e.g. circuit_1, etc.)
-        const otherKeys = allKeys.filter(k => !standardSections.includes(k)).sort();
+        let tabContentHTML = '';
 
-        // Combine order
-        const orderedKeys = [...presentStandardKeys, ...otherKeys];
+        if (currentTab === 'training') {
+            const standardSections = ['warmup', 'strength'];
+            const presentStandardKeys = standardSections.filter(k => trainingKeys.includes(k));
+            const otherKeys = trainingKeys.filter(k => !standardSections.includes(k)).sort();
+            const orderedKeys = [...presentStandardKeys, ...otherKeys];
 
-        const renderSectionsHTML = orderedKeys.map(key => {
-            const exercises = planData.sections[key];
-            let title = key;
-            // Try to use translation for standard keys
-            if (standardSections.includes(key)) {
-                // Map to existing translation keys if possible
-                if (key === 'warmup') title = app.t('warmUp');
-                else if (key === 'strength') title = planData.type === 'daily_correction' ? app.t('posture') : app.t('strength');
-                else if (key === 'stretch') title = app.t('stretch');
-            } else {
-                // Format custom keys: circuit_1_pelvic_correction -> Circuit 1 Pelvic Correction
-                // Remove underscores, Capitalize first letters
-                title = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-                // Optional: Translate 'Circuit' if we want, but English is fine or simple mapping
-                // If it starts with 'circuit', we could make it cleaner
-                if (key.startsWith('circuit')) {
-                    // Try to make it look a bit better? 
-                    // e.g. "circuit_1_pelvic..." -> "Circuit 1: Pelvic..."
-                    title = title.replace(/Circuit (\d+) (.*)/, 'Circuit $1: $2');
+            tabContentHTML = orderedKeys.map(key => {
+                const exercises = planData.sections[key];
+                let title = key;
+                if (standardSections.includes(key)) {
+                    if (key === 'warmup') title = app.t('warmUp');
+                    else if (key === 'strength') title = planData.type === 'daily_correction' ? app.t('posture') : app.t('strength');
+                } else {
+                    title = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                    if (key.startsWith('circuit')) {
+                        title = title.replace(/Circuit (\d+) (.*)/, 'Circuit $1: $2');
+                    }
                 }
+                return app.renderSection(title, exercises, dayKey);
+            }).join('');
+
+            if (!tabContentHTML) {
+                tabContentHTML = `<div class="text-ink-secondary text-sm italic py-8 border-t border-subtle-border">${app.state.lang === 'cn' ? '暂无训练数据' : 'No training data.'}</div>`;
             }
-            return app.renderSection(title, exercises, dayKey);
-        }).join('');
 
-        const html = `
-            <div class="pb-24">
-                <div class="mb-6">
-                    <h2 class="text-2xl font-bold text-slate-900">${planData.title}</h2>
-                    <div class="flex items-center gap-3 mt-2">
-                         ${renderVersionSelector()}
-                    </div>
-                     ${planData.execution_notes ? `
-                        <div class="mt-4 p-4 bg-yellow-50 border border-yellow-100 rounded-lg text-sm text-yellow-800">
-                             <div class="font-bold flex items-center gap-2 mb-2">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                <span>${app.t('technique') || 'Notes'}</span>
-                             </div>
-                             <div class="space-y-1">
-                                ${Object.entries(planData.execution_notes).map(([k, v]) => `<div><span class="font-semibold opacity-75">${k.replace(/_/g, ' ')}:</span> ${v}</div>`).join('')}
-                             </div>
-                        </div>
-                     ` : ''}
-                </div>
+        } else if (currentTab === 'recovery') {
+            const orderedKeys = recoveryKeys.filter(k => allKeys.includes(k));
+            tabContentHTML = orderedKeys.map(key => {
+                const exercises = planData.sections[key];
+                let title = key === 'stretch' ? app.t('stretch') : key;
+                return app.renderSection(title, exercises, dayKey);
+            }).join('');
 
-                <div class="mb-8 flex gap-4 overflow-x-auto snap-x snap-mandatory px-4 -mx-4 pb-4 no-scrollbar">
+            if (!tabContentHTML) {
+                tabContentHTML = `<div class="text-ink-secondary text-sm italic py-8 border-t border-subtle-border">${app.state.lang === 'cn' ? '暂无放松数据' : 'No recovery data.'}</div>`;
+            }
+
+        } else if (currentTab === 'strategy') {
+            tabContentHTML = `
+                <!-- Theory & Strategy -->
+                <div class="space-y-12 py-4">
                      ${planData.strategic_importance ? `
-                        <div class="snap-center flex-shrink-0 w-[85%] sm:w-[400px] h-64 flex flex-col bg-white border border-indigo-100 rounded-xl shadow-sm">
-                            <div class="p-5 pb-2 flex-shrink-0">
-                                <h4 class="text-xs font-bold text-indigo-500 uppercase tracking-wider flex items-center gap-2">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-                                    ${app.t('strategicImportance')}
-                                </h4>
-                            </div>
-                            <div class="p-5 pt-0 overflow-y-auto leading-relaxed text-sm text-slate-600 no-scrollbar">
+                        <div>
+                            <h4 class="text-[14px] font-bold font-serif text-ink uppercase tracking-[0.1em] mb-4">
+                                ${app.t('strategicImportance')}
+                            </h4>
+                            <div class="leading-relaxed text-base text-ink-secondary">
                                 ${planData.strategic_importance}
                             </div>
                         </div>
                      ` : ''}
                      
                      ${planData.core_principle ? `
-                        <div class="snap-center flex-shrink-0 w-[85%] sm:w-[400px] h-64 flex flex-col bg-white border border-emerald-100 rounded-xl shadow-sm">
-                            <div class="p-5 pb-2 flex-shrink-0">
-                                <h4 class="text-xs font-bold text-emerald-500 uppercase tracking-wider flex items-center gap-2">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                    ${app.t('corePrinciple')}
-                                </h4>
-                            </div>
-                            <div class="p-5 pt-0 overflow-y-auto leading-relaxed text-sm text-slate-600 no-scrollbar">
+                        <div>
+                            <h4 class="text-[14px] font-bold font-serif text-ink uppercase tracking-[0.1em] mb-4">
+                                ${app.t('corePrinciple')}
+                            </h4>
+                            <div class="leading-relaxed text-base text-ink-secondary">
                                 ${planData.core_principle}
                             </div>
                         </div>
                      ` : ''}
 
                      ${(planData.dietary_suggestions || planData.diet) ? `
-                        <div class="snap-center flex-shrink-0 w-[85%] sm:w-[400px] h-64 flex flex-col bg-white border border-orange-100 rounded-xl shadow-sm">
-                            <div class="p-5 pb-2 flex-shrink-0">
-                                <h4 class="text-xs font-bold text-orange-500 uppercase tracking-wider flex items-center gap-2">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
-                                    ${app.t('dietarySuggestions')}
-                                </h4>
-                            </div>
-                            <div class="p-5 pt-0 overflow-y-auto leading-relaxed text-sm text-slate-600 no-scrollbar">
+                        <div>
+                            <h4 class="text-[14px] font-bold font-serif text-ink uppercase tracking-[0.1em] mb-4">
+                                ${app.t('dietarySuggestions')}
+                            </h4>
+                            <div class="leading-relaxed text-base text-ink-secondary">
                                 <p>${planData.dietary_suggestions || planData.diet}</p>
                             </div>
                         </div>
                      ` : ''}
 
                      ${planData.nutrition_timing ? `
-                        <div class="snap-center flex-shrink-0 w-[85%] sm:w-[400px] h-64 flex flex-col bg-white border border-rose-100 rounded-xl shadow-sm">
-                            <div class="p-5 pb-2 flex-shrink-0">
-                                <h4 class="text-xs font-bold text-rose-500 uppercase tracking-wider flex items-center gap-2">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                                    ${app.t('nutritionTiming')}
-                                </h4>
-                            </div>
-                            <div class="p-5 pt-0 overflow-y-auto no-scrollbar">
-                                <ul class="text-sm text-slate-600 leading-relaxed space-y-2">
-                                    ${Object.entries(planData.nutrition_timing).map(([k, v]) => {
-            const label = k === 'pre_workout' ? 'Pre' :
-                k === 'intra_workout' ? 'Intra' :
-                    k === 'post_workout' ? 'Post' :
-                        k === 'evening' ? 'Eve' : k;
-
-            let content = '';
-            if (typeof v === 'string') {
-                content = v;
-            } else if (v && typeof v === 'object') {
-                content = `
-                        <div class="flex flex-col">
-                            <span class="font-medium text-slate-700">${v.composition || ''}</span>
-                            <span class="text-xs text-slate-400 mt-0.5">${v.timing || ''}</span>
-                        </div>
-                    `;
-            }
-
-            return `
-                <li class="flex gap-3 items-start p-2 bg-rose-50/30 rounded-lg border border-rose-100/50">
-                    <span class="font-bold text-rose-500 text-xs mt-1 uppercase tracking-wider min-w-[3em] text-right">${label}</span>
-                    <div class="text-sm text-slate-600 leading-snug flex-grow">
+                        <div>
+                            <h4 class="text-[14px] font-bold font-serif text-ink uppercase tracking-[0.1em] mb-4">
+                                ${app.t('nutritionTiming')}
+                            </h4>
+                            <ul class="text-base text-ink-secondary leading-relaxed space-y-6">
+                                ${Object.entries(planData.nutrition_timing).map(([k, v]) => {
+                const label = k === 'pre_workout' ? 'Pre' : k === 'intra_workout' ? 'Intra' : k === 'post_workout' ? 'Post' : k === 'evening' ? 'Eve' : k;
+                let content = '';
+                if (typeof v === 'string') {
+                    content = v;
+                } else if (v && typeof v === 'object') {
+                    content = `<span class="font-medium text-ink">${v.composition || ''}</span> <span class="italic text-ink-secondary block md:inline md:ml-2">${v.timing || ''}</span>`;
+                }
+                return `
+                <li class="flex flex-col md:flex-row md:gap-6 items-start pb-6 border-b border-subtle-fill last:border-0 last:pb-0">
+                    <span class="font-serif font-bold text-ink text-sm uppercase tracking-wider md:min-w-[4em] pt-1">${label}</span>
+                    <div class="text-base text-ink-secondary leading-[1.85] flex-grow">
                         ${content}
                     </div>
                 </li>
                 `;
-        }).join('')}
-                                </ul>
-                            </div>
+            }).join('')}
+                            </ul>
                         </div>
                      ` : ''}
 
                      ${(() => {
-                const metadataField = (title, data, colorClass, iconColorClass) => {
-                    if (!data) return '';
-                    const formatKey = (k) => k.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                    const metadataField = (title, data) => {
+                        if (!data) return '';
+                        const formatKey = (k) => k.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
-                    const renderValue = (v) => {
-                        if (typeof v === 'string') return v;
-                        if (typeof v === 'object' && v !== null && !Array.isArray(v)) {
-                            return `<ul class="list-disc pl-4 space-y-1 mt-1">${Object.entries(v).map(([subK, subV]) =>
-                                `<li><span class="font-medium text-slate-700">${formatKey(subK)}:</span> <span class="text-slate-600">${typeof subV === 'string' ? subV : JSON.stringify(subV)}</span></li>`
-                            ).join('')}</ul>`;
-                        }
-                        if (Array.isArray(v)) {
-                            return `<ul class="list-disc pl-4 space-y-1 mt-1">${v.map(item => `<li>${item}</li>`).join('')}</ul>`;
-                        }
-                        return JSON.stringify(v);
-                    };
+                        const renderValue = (v) => {
+                            if (typeof v === 'string') return v;
+                            if (typeof v === 'object' && v !== null && !Array.isArray(v)) {
+                                return `<ul class="list-none space-y-3 mt-3">${Object.entries(v).map(([subK, subV]) =>
+                                    `<li><span class="font-serif font-medium text-ink">${formatKey(subK)}:</span> <span class="text-ink-secondary">${typeof subV === 'string' ? subV : JSON.stringify(subV)}</span></li>`
+                                ).join('')}</ul>`;
+                            }
+                            if (Array.isArray(v)) {
+                                return `<ul class="list-none space-y-3 mt-3">${v.map(item => `<li>— ${item}</li>`).join('')}</ul>`;
+                            }
+                            return JSON.stringify(v);
+                        };
 
-                    return `
-                    <div class="snap-center flex-shrink-0 w-[85%] sm:w-[400px] h-64 flex flex-col bg-white border border-${colorClass}-100 rounded-xl shadow-sm">
-                        <div class="p-5 pb-2 flex-shrink-0">
-                            <h4 class="text-xs font-bold text-${iconColorClass}-500 uppercase tracking-wider flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-${iconColorClass}-500"></span>
+                        return `
+                        <div>
+                            <h4 class="text-[14px] font-bold font-serif text-ink uppercase tracking-[0.1em] mb-4">
                                 ${title}
                             </h4>
-                        </div>
-                        <div class="p-5 pt-0 overflow-y-auto text-sm text-slate-600 leading-relaxed space-y-3 no-scrollbar">
-                            <ul class="space-y-3">
+                            <ul class="space-y-6">
                                 ${Object.entries(data).map(([k, v]) => `
-                                    <li>
-                                        <div class="font-semibold text-${iconColorClass}-800/80 mb-1">${formatKey(k)}</div>
-                                        <div class="text-slate-600 leading-snug">${renderValue(v)}</div>
+                                    <li class="pb-4">
+                                        <div class="font-serif font-semibold text-ink mb-2">${formatKey(k)}</div>
+                                        <div class="text-ink-secondary leading-[1.85]">${renderValue(v)}</div>
                                     </li>
                                 `).join('')}
                             </ul>
                         </div>
-                    </div>
                     `;
-                };
+                    };
 
-                return `
-                            ${metadataField(app.t('postWorkoutNotes'), planData.post_workout_notes, 'indigo', 'indigo')}
-                            ${metadataField(app.t('recoveryOptimization'), planData.recovery_optimization, 'teal', 'teal')}
+                    return `
+                            ${metadataField(app.t('postWorkoutNotes'), planData.post_workout_notes)}
+                            ${metadataField(app.t('recoveryOptimization'), planData.recovery_optimization)}
                         `;
-            })()}
+                })()}
+                </div>
+            `;
+        }
+
+        const html = `
+            <div class="pb-24">
+                <!-- Main Title & Meta -->
+                <div class="mb-12">
+                    <h2 class="text-[40px] leading-[1.1] font-bold font-serif text-ink tracking-tight">${planData.title}</h2>
+                    <div class="flex items-center gap-3 mt-4">
+                         ${renderVersionSelector()}
+                    </div>
+                     ${planData.execution_notes ? `
+                        <div class="mt-8 p-6 bg-subtle-fill border border-subtle-border rounded-xl">
+                             <div class="font-bold flex items-center gap-2 mb-3 text-ink">
+                                <span>${app.t('technique') || 'Notes'}</span>
+                             </div>
+                             <div class="space-y-2 text-ink-secondary text-sm leading-[1.6]">
+                                ${Object.entries(planData.execution_notes).map(([k, v]) => `<div><span class="font-serif font-semibold text-ink">${k.replace(/_/g, ' ')}:</span> ${v}</div>`).join('')}
+                             </div>
+                        </div>
+                     ` : ''}
                 </div>
 
-                <div class="space-y-8">
-                    ${renderSectionsHTML}
+                ${renderTabsHTML}
+
+                <div class="min-h-[400px]">
+                    ${tabContentHTML}
                 </div>
                 
-                <div class="mt-8 p-4 bg-slate-100 rounded-lg text-center border border-slate-200">
-                    <h3 class="text-slate-800 font-bold mb-2">${app.t('sessionComplete')}</h3>
-                    <button onclick="app.goHome()" class="cursor-pointer bg-accent hover:bg-accent-hover text-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg shadow-accent/20">
+                <!-- Terminal Coda (Completion) -->
+                <div class="mt-20 pt-16 border-t border-subtle-border text-center flex flex-col items-center">
+                    <div class="text-[14px] font-serif font-bold text-ink-secondary uppercase tracking-[0.1em] mb-8">
+                        ${app.t('sessionComplete')}
+                    </div>
+                    <button onclick="app.goHome()" class="cursor-pointer bg-surface border border-stroke-tint hover:bg-subtle-fill text-ink font-serif font-bold py-4 px-12 transition-colors rounded-xl">
                         ${app.t('finishWorkout')}
                     </button>
                 </div>
@@ -533,12 +544,14 @@ const app = {
         if (!exercises || exercises.length === 0) return '';
 
         return `
-            <div class="mb-10">
-                <div class="flex items-center gap-4 mb-6">
-                     <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest">${title}</h3>
-                     <div class="h-px bg-slate-100 flex-grow"></div>
+            <div class="mb-16">
+                <div class="flex items-center gap-6 mb-10 mt-16 relative">
+                     <div class="h-px bg-subtle-border flex-grow hidden sm:block border-dashed"></div>
+                     <h3 class="text-[24px] font-bold font-serif text-ink tracking-tight">${title}</h3>
+                     <div class="h-px bg-subtle-border flex-grow hidden sm:block border-dashed"></div>
                 </div>
-                <div class="space-y-8">
+                <!-- Horizontal Scroll Container -->
+                <div class="flex overflow-x-auto gap-6 snap-x snap-mandatory pb-8 -mx-4 px-4 sm:mx-0 sm:px-0 scroll-smooth no-scrollbar">
                     ${exercises.map((ex, index) => app.renderExerciseCard(ex, index, dayKey, title)).join('')}
                 </div>
             </div>
@@ -547,15 +560,6 @@ const app = {
 
     renderExerciseCard: (ex, index, dayKey, sectionTitle) => {
         const safe = (arr) => arr && arr.length ? arr : [];
-        // Unique key for DOM IDs needs to be composite to avoid collisions between sections if indices reset
-        // Actually, let's use the exercise ID if available, or a reliable hash. 
-        // using index is risky if we have split arrays. 
-        // Let's use ex.id as the primary key suffix for DOM elements. 
-        // Ensure ex.id is safe string.
-        // If ex.id is missing (daily_v1 might not have strict IDs?), generate one?
-        // daily_v1 does not have IDs for exercises! "name": "...", "duration": "..."
-        // So we MUST generate a safe ID. Using sectionTitle + Index is better in that case.
-
         let safeId = ex.id ? ex.id.replace(/[^a-zA-Z0-9-_]/g, '') : null;
         if (!safeId) {
             safeId = `${sectionTitle}-${index}`.replace(/[^a-zA-Z0-9-_]/g, '-').toLowerCase();
@@ -580,99 +584,103 @@ const app = {
         // Handle technique_notes
         let structuredNotes = '';
         if (ex.technique_notes) {
-            // Parse 【Title】Content
-            // Splitting by 【
             const parts = ex.technique_notes.split(/【/);
-            // parts[0] might be empty or intro text.
             structuredNotes = parts.map((part, i) => {
                 if (!part.trim()) return '';
                 if (part.includes('】')) {
                     const [title, content] = part.split('】');
                     return `
-                        <div class="mb-3 last:mb-0">
-                            <span class="font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded text-xs">${title}</span>
-                            <span class="text-slate-600 text-sm block mt-1 leading-relaxed">${content}</span>
+                        <div class="mb-4 last:mb-0">
+                            <span class="font-serif font-bold text-ink mr-2">${title}:</span>
+                            <span class="text-ink-secondary text-base leading-[1.85]">${content}</span>
                         </div>
                      `;
                 } else {
-                    // Plain text without brackets (e.g. at start)
-                    return `<div class="mb-2 text-slate-600 text-sm">${part}</div>`;
+                    return `<div class="mb-4 text-ink-secondary text-base leading-[1.85]">${part}</div>`;
                 }
             }).join('');
         }
 
         return `
-        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden exercise-card shadow-sm transition-all">
+        <div class="flex-shrink-0 w-[88vw] sm:w-[480px] snap-start bg-surface border border-subtle-border rounded-2xl overflow-hidden exercise-card transition-all relative group flex flex-col">
             <!-- Card Header -->
-            <div class="p-5 flex gap-5 items-start cursor-pointer select-none" onclick="app.toggleDetails('${dayKey}', '${safeId}')">
-                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-slate-50/80 border border-slate-100 flex items-center justify-center text-sm font-bold text-slate-400 pt-0.5">
-                    ${index + 1}
-                </div>
-                <div class="flex-grow pt-1">
-                    <h3 class="font-bold text-xl text-slate-800 leading-snug">${ex.name}</h3>
-                    <div class="flex flex-wrap gap-2 mt-3">
-                        ${ex.target ? `<span class="px-2.5 py-1 rounded-md bg-slate-50 text-slate-500 text-xs border border-slate-100 font-medium">${ex.target}</span>` : ''}
-                        ${ex.tempo ? `<span class="px-2.5 py-1 rounded-md bg-slate-50 text-slate-500 text-xs border border-slate-100 font-medium">Tempo: ${ex.tempo}</span>` : ''}
-                        ${(ex.rest && ex.rest !== "N/A") ? `<span class="px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-600 text-xs border border-indigo-100 font-bold flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>${restText}</span>` : ''}
-                    </div>
-                    <div class="mt-3 text-accent font-medium text-sm flex items-center justify-between">
-                        <span>${metaDuration}</span>
-                        <div class="flex items-center gap-1 text-slate-400 text-xs whitespace-nowrap transition-colors hover:text-slate-600">
-                            <span id="btn-text-${safeId}">${app.t('showDetails')}</span>
-                            <svg id="icon-${safeId}" class="w-4 h-4 transition-transform duration-300 transform rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            <div class="p-6 sm:p-8 flex flex-col gap-6 select-none flex-grow relative z-10 overflow-hidden">
+
+                <div class="flex items-start gap-4">
+                    <div class="flex-grow">
+                        <h3 class="font-bold text-[22px] font-serif text-ink leading-tight">${ex.name}</h3>
+                        <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2">
+                            ${ex.target ? `<span class="text-ink-secondary text-[12px] uppercase tracking-wider font-bold">${ex.target}</span>` : ''}
+                            ${ex.tempo ? `<span class="text-ink-secondary text-[12px] font-mono opacity-80 italic">Tempo: ${ex.tempo}</span>` : ''}
                         </div>
                     </div>
+                    <div class="flex flex-shrink-0 items-center gap-3 pt-1" onclick="event.stopPropagation()">
+                         ${(ex.rest && ex.rest !== "N/A") ? `
+                         <button onclick="app.startTimer(this, ${restTime})" class="group cursor-pointer w-9 h-9 flex items-center justify-center bg-subtle-fill hover:bg-subtle-border text-ink-secondary transition-all border border-subtle-border rounded-full active:scale-90 relative" title="${app.t('restTimer')} (${restText})">
+                            <span class="group-[.timer-active]:hidden">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </span>
+                            <div class="hidden group-[.timer-active]:flex flex-col items-center justify-center leading-none">
+                                <span class="countdown-display font-mono font-bold text-[10px] text-accent"></span>
+                            </div>
+                         </button>
+                         ` : ''}
+                         <input type="checkbox" id="check-${safeId}" class="custom-checkbox" onchange="app.toggleCheck('${dayKey}', '${safeId}')">
+                    </div>
                 </div>
-                 <div class="flex items-center h-full pt-2 pl-2" onclick="event.stopPropagation()">
-                     <input type="checkbox" id="check-${safeId}" class="custom-checkbox" onchange="app.toggleCheck('${dayKey}', '${safeId}')">
+
+                <!-- Summary Row -->
+                <div class="pt-4 border-t border-subtle-border/50">
+                    <div class="text-ink font-serif font-medium text-lg leading-tight">
+                        ${metaDuration}
+                    </div>
                 </div>
             </div>
 
-            <!-- Learning Content -->
-            <div id="details-${safeId}" class="learning-content collapsed bg-slate-50 border-t border-slate-100 px-4">
-                <div class="py-4"> 
+            <!-- Learning Content (Always Visible) -->
+            <div id="details-${safeId}" class="learning-content border-t border-subtle-border px-6 sm:px-8">
+                <div class="py-8"> 
                     ${safe(ex.setup).length > 0 ? `
-                        <div class="mb-4 p-3 bg-white border border-slate-200 rounded text-xs text-slate-600 font-mono leading-relaxed shadow-sm">
+                        <div class="mb-8 pl-4 border-l border-subtle-border text-[15px] text-ink-secondary font-mono leading-[1.6]">
                             ${ex.setup.map(s => `<div>${s}</div>`).join('')}
                         </div>
                     ` : ''}
                     
                     ${structuredNotes ? `
-                        <div class="mb-4 border-l-2 border-accent/20 pl-3">
+                        <div class="mb-8">
                             ${structuredNotes}
                         </div>
                     ` : ''}
 
                     ${ex.muscle_feeling ? `
-                        <div class="mb-4 p-3 bg-blue-50/50 border border-blue-100 rounded text-sm text-slate-700">
-                             <div class="flex items-center gap-2 mb-1">
-                                <svg class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                                <span class="font-bold text-blue-900 text-xs uppercase tracking-wider">${app.t('muscleFeeling')}</span>
+                        <div class="mb-8 pl-4 border-l-2 border-accent/40 bg-subtle-fill/50 py-3 pr-4">
+                             <div class="flex items-center gap-2 mb-2">
+                                <span class="font-bold font-serif text-ink uppercase tracking-widest text-[13px]">${app.t('muscleFeeling')}</span>
                              </div>
-                             <p class="leading-relaxed pl-6 text-slate-600">${ex.muscle_feeling}</p>
+                             <p class="leading-[1.85] text-ink-secondary">${ex.muscle_feeling}</p>
                         </div>
                     ` : ''}
 
                     ${safe(ex.cues).length > 0 ? `
-                        <div class="mb-4">
-                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">${app.t('technique')}</h4>
-                            <ul class="space-y-2">
+                        <div class="mb-8">
+                            <h4 class="text-[13px] font-bold font-serif text-ink uppercase tracking-widest mb-3">${app.t('technique')}</h4>
+                            <ul class="space-y-3">
                                 ${ex.cues.map(c => {
-            const html = c.replace(/\*\*(.*?)\*\*/g, '<span class="text-accent-hover font-bold">$1</span>');
-            return `<li class="text-sm text-slate-600 pl-3 border-l-2 border-slate-200">${html}</li>`;
+            const html = c.replace(/\*\*(.*?)\*\*/g, '<span class="text-ink font-bold">$1</span>');
+            return `<li class="text-base text-ink-secondary pl-4 border-l border-subtle-border leading-[1.85]">${html}</li>`;
         }).join('')}
                             </ul>
                         </div>
                     ` : ''}
 
                     ${safe(ex.mistakes).length > 0 ? `
-                        <div>
-                             <h4 class="text-xs font-bold text-red-400 uppercase tracking-wider mb-2 flex items-center gap-1">${app.t('commonErrors')}</h4>
-                             <div class="space-y-2">
+                        <div class="mb-8">
+                             <h4 class="text-[13px] font-bold font-serif text-ink uppercase tracking-widest mb-3">${app.t('commonErrors')}</h4>
+                             <div class="space-y-4">
                                 ${ex.mistakes.map(m => `
-                                    <div class="bg-red-50 border border-red-100 rounded p-2 text-sm">
-                                        <div class="text-red-700 font-semibold">${m.error}</div>
-                                        <div class="text-red-500 text-xs mt-0.5">${app.t('fix')}: ${m.fix}</div>
+                                    <div class="pl-4 border-l-2 border-stroke-tint py-1">
+                                        <div class="text-ink font-semibold leading-[1.6]"><del class="opacity-70">${m.error}</del></div>
+                                        <div class="text-ink-secondary mt-1 leading-[1.6]"><span class="uppercase tracking-widest text-[11px] font-bold mr-2">${app.t('fix')}:</span> ${m.fix}</div>
                                     </div>
                                 `).join('')}
                              </div>
@@ -681,55 +689,33 @@ const app = {
                 </div>
                 
                  ${(ex.progression || ex.weight_selection) ? `
-                     <div class="border-t border-slate-100 pt-4 pb-2 grid grid-cols-1 gap-4">
+                     <div class="border-t border-subtle-border py-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                          ${ex.weight_selection ? `
                              <div>
-                                 <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">${app.t('weightSelection')}</h4>
-                                 <div class="bg-slate-50 border border-slate-200 rounded p-3 text-xs space-y-2">
-                                     ${ex.weight_selection.method ? `<div><span class="font-semibold text-slate-700">Method:</span> <span class="text-slate-500">${ex.weight_selection.method}</span></div>` : ''}
-                                     ${ex.weight_selection.first_time_estimate ? `<div><span class="font-semibold text-slate-700">Estimate:</span> <span class="text-slate-500">${ex.weight_selection.first_time_estimate}</span></div>` : ''}
-                                     ${ex.weight_selection.progression ? `<div><span class="font-semibold text-slate-700">Progression:</span> <span class="text-slate-500">${ex.weight_selection.progression}</span></div>` : ''}
+                                 <h4 class="text-[13px] font-bold font-serif text-ink uppercase tracking-widest mb-3">${app.t('weightSelection')}</h4>
+                                 <div class="space-y-2 text-base text-ink-secondary leading-[1.6]">
+                                     ${ex.weight_selection.method ? `<div><span class="font-serif font-bold text-ink mr-2">Method:</span> ${ex.weight_selection.method}</div>` : ''}
+                                     ${ex.weight_selection.first_time_estimate ? `<div><span class="font-serif font-bold text-ink mr-2">Estimate:</span> ${ex.weight_selection.first_time_estimate}</div>` : ''}
+                                     ${ex.weight_selection.progression ? `<div><span class="font-serif font-bold text-ink mr-2">Progression:</span> ${ex.weight_selection.progression}</div>` : ''}
                                  </div>
                              </div>
                          ` : ''}
                          ${ex.progression ? `
                              <div>
-                                 <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">${app.t('progression')}</h4>
-                                 <ul class="space-y-1">
+                                 <h4 class="text-[13px] font-bold font-serif text-ink uppercase tracking-widest mb-3">${app.t('progression')}</h4>
+                                 <ul class="space-y-2 text-base text-ink-secondary leading-[1.6]">
                                      ${Array.isArray(ex.progression) ? ex.progression.map(p => `
-                                         <li class="text-xs text-slate-500 flex items-start gap-2">
-                                             <span class="text-slate-300 mt-0.5">•</span>
+                                         <li class="flex items-start gap-3">
+                                             <span class="text-subtle-border mt-0.5">—</span>
                                              <span>${p}</span>
                                          </li>
-                                     `).join('') : `<li class="text-xs text-slate-500">${ex.progression}</li>`}
+                                     `).join('') : `<li>${ex.progression}</li>`}
                                  </ul>
                              </div>
                          ` : ''}
                      </div>
                  ` : ''}
                 </div>
-
-            <!-- Logger Section (Rest Timer Only) -->
-            <div class="px-5 pb-5 pt-2 bg-white">
-                ${(ex.rest && ex.rest !== "N/A") ? `
-                <div class="flex justify-end">
-                    <button onclick="app.startTimer(this, ${restTime})" class="group cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 text-sm font-medium transition-colors">
-                        <span class="flex items-center gap-2 group-[.timer-active]:hidden">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>${app.t('restTimer')}</span>
-                            <span class="opacity-75 text-xs">(${restText})</span>
-                        </span>
-                        <span class="hidden group-[.timer-active]:flex items-center gap-2 text-indigo-600">
-                            <span class="relative flex h-2 w-2">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-                            </span>
-                            <span class="countdown-display font-mono font-bold"></span>
-                        </span>
-                    </button>
-                </div>
-                ` : ''}
-            </div>
         </div>
         `;
     },
@@ -772,11 +758,11 @@ const app = {
             // Style-wise, let's just proceed.
         });
 
-        // let originalContent = btn.innerHTML; // Using CSS toggle now
+        // Reset styling and text for timer
         let timeLeft = duration;
 
-        btn.classList.add('timer-active', 'bg-indigo-50', 'text-indigo-600');
-        btn.classList.remove('bg-slate-50', 'text-slate-500', 'hover:bg-slate-100', 'hover:text-slate-700');
+        btn.classList.add('timer-active', 'bg-subtle-fill', 'text-accent', 'border-accent/30');
+        btn.classList.remove('text-ink-secondary', 'hover:bg-subtle-border', 'border-subtle-border');
 
         const display = btn.querySelector('.countdown-display');
 
@@ -791,8 +777,8 @@ const app = {
 
                 setTimeout(() => {
                     // Reset styling
-                    btn.classList.remove('timer-active', 'bg-indigo-50', 'text-indigo-600');
-                    btn.classList.add('bg-slate-50', 'text-slate-500');
+                    btn.classList.remove('timer-active', 'text-accent', 'border-accent/30');
+                    btn.classList.add('text-ink-secondary', 'border-subtle-border');
                 }, 3000);
             } else {
                 display.innerText = `${timeLeft}s`;
