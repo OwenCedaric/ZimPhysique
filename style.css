@@ -110,6 +110,14 @@ h6 {
 
 
 
+.hollow-watermark {
+    color: var(--color-ink); /* Fallback */
+    -webkit-text-fill-color: var(--color-surface);
+    -webkit-text-stroke: 1px var(--color-ink);
+    paint-order: stroke fill;
+    opacity: 0.15;
+}
+
 .learning-content {
     max-height: 320px;
     /* Reduced height for more compact cards */

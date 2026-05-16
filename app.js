@@ -248,9 +248,11 @@ const app = {
                 <!-- Daily Posture Correction (Mandatory) -->
                 <div class="bg-surface border border-subtle-border p-6 relative overflow-hidden group rounded-2xl">
                     <div class="flex justify-between items-start mb-6">
-                        <div>
-                            <span class="text-accent text-[10px] uppercase tracking-wider font-bold border border-subtle-border px-2 py-1 rounded">${app.t('mandatory')}</span>
+                        <div class="relative z-10">
                             <h3 class="text-[20px] font-bold font-serif text-ink mt-4">${app.t('dailyTitle')}</h3>
+                        </div>
+                        <div class="absolute right-[-10px] top-[-15px] text-[64px] font-black pointer-events-none uppercase tracking-tighter transform rotate-6 select-none z-0 hollow-watermark">
+                            ${app.t('mandatory')}
                         </div>
                     </div>
                     <p class="text-ink-secondary text-base mb-8 font-light">${app.t('dailyDesc')}</p>
