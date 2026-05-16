@@ -268,11 +268,11 @@ const app = {
 
             return `
                         <button onclick="app.startWorkout('${day.key}')" class="cursor-pointer w-full text-left bg-surface border ${isToday ? 'border-stroke-tint' : 'border-subtle-border'} hover:bg-subtle-fill p-5 transition-all relative overflow-hidden group flex justify-between items-center rounded-2xl">
-                            <div>
+                            <div class="relative z-10">
                                 <h4 class="font-serif font-bold text-ink text-[18px]">${day.label}</h4>
                                 <p class="text-ink-secondary text-xs mt-2 uppercase tracking-wider font-light">${app.t('startWorkout')}</p>
                             </div>
-                            ${isToday ? `<div class="text-accent text-xs font-bold uppercase tracking-widest">TODAY</div>` : ''}
+                            ${isToday ? `<div class="absolute right-[-10px] bottom-[-20px] text-[72px] font-black text-ink opacity-[0.05] pointer-events-none uppercase tracking-tighter transform -rotate-6 select-none z-0">TODAY</div>` : ''}
                         </button>
                         `
         }).join('')}
