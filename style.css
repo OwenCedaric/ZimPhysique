@@ -47,6 +47,11 @@
         --color-subtle-fill: rgba(210, 214, 221, 0.08);
         --color-stroke-tint: rgba(210, 214, 221, 0.6);
     }
+
+    .hollow-watermark {
+        opacity: 0.35;
+        -webkit-text-stroke: 1.2px var(--color-ink);
+    }
 }
 
 body {

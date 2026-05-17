@@ -187,21 +187,18 @@ const app = {
                 </div>
 
                 <!-- Daily Posture Correction (Mandatory) -->
-                <div class="bg-surface border border-subtle-border p-6 relative overflow-hidden group rounded-2xl">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="relative z-10">
-                            <h3 class="text-[20px] font-bold font-serif text-ink mt-4">${app.t('dailyTitle')}</h3>
+                <button onclick="app.startWorkout('daily')" class="cursor-pointer w-full text-left bg-surface border border-subtle-border p-6 relative overflow-hidden group rounded-2xl hover:bg-subtle-fill transition-all flex flex-col gap-2">
+                    <div class="flex justify-between items-start w-full relative z-10">
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-[20px] font-bold font-serif text-ink">${app.t('dailyTitle')}</h3>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-ink-secondary transform transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                         </div>
-                        <div class="absolute right-[-10px] top-[-15px] text-[64px] font-black pointer-events-none uppercase tracking-tighter transform rotate-6 select-none z-0 hollow-watermark">
+                        <div class="absolute right-[-10px] top-[-25px] text-[64px] font-black pointer-events-none uppercase tracking-tighter transform rotate-6 select-none z-0 hollow-watermark">
                             ${app.t('mandatory')}
                         </div>
                     </div>
-                    <p class="text-ink-secondary text-base mb-8 font-light">${app.t('dailyDesc')}</p>
-                    <button onclick="app.startWorkout('daily')" class="cursor-pointer w-full bg-subtle-fill hover:bg-subtle-border text-ink font-medium py-3.5 transition-all flex items-center justify-center gap-2 active:scale-[0.98] rounded-xl">
-                        <span>${app.t('startRitual')}</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-ink-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                    </button>
-                </div>
+                    <p class="text-ink-secondary text-base font-light pr-12 relative z-10">${app.t('dailyDesc')}</p>
+                </button>
 
                 <!-- Workouts List -->
                 <div class="space-y-4">
