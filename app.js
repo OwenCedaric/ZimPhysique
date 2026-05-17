@@ -6,7 +6,6 @@ const app = {
     state: {
         currentView: 'home', // 'home' or 'workout'
         activeDay: null, // 'monday', 'wednesday', 'friday', 'saturday', 'sunday'
-        activePlanId: null, // e.g. 'monday_v1'
         todayDayIndex: new Date().getDay(), // 0 = Sunday, 1 = Monday, etc.
         expandedCards: {}, // Stores state of expanded cards per day
         manifest: null, // Loaded from data/manifest.json
@@ -43,59 +42,21 @@ const app = {
             app.state.manifest = { plans: {} };
 
             // Eagerly load all JSON files in data directory
-            // Note: In a larger app, we might lazy load, but for these small JSONs, eager is fine and simplifies logic.
             const modules = import.meta.glob('./data/*.json', { eager: true });
 
             for (const path in modules) {
                 const module = modules[path];
-                // path is like "./data/monday_v1.json"
+                // path is like "./data/monday.json"
                 // Extract filename
-                const filename = path.split('/').pop(); // "monday_v1.json"
-                const basename = filename.replace('.json', ''); // "monday_v1"
+                const filename = path.split('/').pop(); // "monday.json"
+                const dayKey = filename.replace('.json', ''); // "monday"
 
-                // Parse Day and Version
-                // Assumes format: {day}_v{version}.json (e.g. monday_v1.json)
-                // Note: The ID inside the JSON (e.g. "monday_v1") is also reliable
-
-                // Let's use the file content's ID or logic to categorize
-                // Convention: day is everything before the last underscore
-                const parts = basename.split('_');
-                const versionStr = parts.pop(); // "v1"
-                const dayKey = parts.join('_'); // "monday" (or "upper_body" etc)
-
-                if (!app.state.manifest.plans[dayKey]) {
-                    app.state.manifest.plans[dayKey] = {
-                        active: 0,
-                        files: []
-                    };
-                }
-
-                // Parse version number strictly
-                // "monday_v2" -> 2. "monday_2" -> 2. "monday" -> 1 (default)
-                let versionNum = 1;
-                const vMatch = basename.match(/_v?(\d+)$/);
-                if (vMatch) {
-                    versionNum = parseInt(vMatch[1], 10);
-                }
-
-                // Store structured info
-                app.state.manifest.plans[dayKey].files.push({
-                    filename: filename,
-                    version: versionNum
-                });
-
-                // Update active version to the max found
-                if (versionNum > app.state.manifest.plans[dayKey].active) {
-                    app.state.manifest.plans[dayKey].active = versionNum;
-                }
+                app.state.manifest.plans[dayKey] = {
+                    filename: filename
+                };
 
                 // Cache the data immediately
                 app.state.workoutCache[filename] = module.default || module;
-            }
-
-            // Sort files by version descending for each plan
-            for (const key in app.state.manifest.plans) {
-                app.state.manifest.plans[key].files.sort((a, b) => b.version - a.version);
             }
 
             console.log("Generated Manifest:", app.state.manifest);
@@ -139,40 +100,23 @@ const app = {
         app.renderWorkout(app.state.activeDay);
     },
 
-    startWorkout: async (dayKey, specificFilename = null) => {
-        // Find active version
+    startWorkout: async (dayKey) => {
         const planConfig = app.state.manifest.plans[dayKey];
         if (!planConfig) {
             console.error("No plan found for " + dayKey);
             return;
         }
 
-        const activeVersion = planConfig.active;
-
-        let filename = specificFilename;
-        if (!filename) {
-            // Find file matching active version
-            const fileObj = planConfig.files.find(f => f.version === activeVersion);
-            // Fallback to the first file (highest version due to sort)
-            filename = fileObj ? fileObj.filename : planConfig.files[0].filename;
-        }
-
-        if (!filename) {
-            console.error("No file found for version " + activeVersion);
-            return;
-        }
-
-        // Load data (already cached by init via import.meta.glob)
-        const cacheKey = filename;
-        if (!app.state.workoutCache[cacheKey]) {
+        const filename = planConfig.filename;
+        if (!app.state.workoutCache[filename]) {
             console.error(`Data for ${filename} not found in cache.`);
             return;
         }
 
         app.state.currentView = 'workout';
         app.state.activeDay = dayKey;
-        app.state.activePlanConfig = planConfig; // Store for version switching
-        app.state.activePlanData = app.state.workoutCache[cacheKey]; // The actual data object
+        app.state.activePlanConfig = planConfig;
+        app.state.activePlanData = app.state.workoutCache[filename];
 
         app.renderWorkout();
     },
@@ -219,13 +163,10 @@ const app = {
 
         // Generate days array dynamically
         const days = planKeys.map(key => {
-            // Get active version info
             const planConfig = app.state.manifest.plans[key];
-            const activeVersion = planConfig.active;
-            const fileObj = planConfig.files.find(f => f.version === activeVersion) || planConfig.files[0];
 
             // Get data from cache
-            const data = app.state.workoutCache[fileObj.filename];
+            const data = app.state.workoutCache[planConfig.filename];
             const title = data ? data.title : key; // Fallback to key if no title
 
             // Localized Day Name
@@ -289,41 +230,14 @@ const app = {
         const container = document.getElementById('app-container');
         const headerActions = document.getElementById('header-actions');
 
-        // Render Version Selector logic & Language Toggle
-        // We'll embed it directly in the view
         const dayKey = app.state.activeDay;
-        const planConfig = app.state.activePlanConfig;
 
         // Add Language Toggle to headerActions on workout view too
         headerActions.innerHTML = `
              <button onclick="app.toggleLang()" class="cursor-pointer text-xs font-bold text-ink-secondary bg-subtle-fill hover:bg-subtle-border px-3 py-1.5 rounded transition-colors uppercase">
                 ${app.state.lang === 'cn' ? 'EN' : '中文'}
-            </button>
+             </button>
         `;
-
-        // Helper to generate version options
-        const renderVersionSelector = () => {
-            if (!planConfig || planConfig.files.length <= 1) {
-                return `<span class="bg-subtle-fill px-2 py-0.5 rounded text-xs font-mono text-ink-secondary border border-subtle-border">v${app.state.activePlanData.version}</span>`;
-            }
-
-            const options = planConfig.files.map(f => {
-                const cached = app.state.workoutCache[f.filename];
-                const selected = cached === app.state.activePlanData ? 'selected' : '';
-                return `<option value="${f.filename}" ${selected}>v${f.version}</option>`;
-            }).join('');
-
-            return `
-                <div class="relative inline-block">
-                    <select onchange="app.startWorkout('${dayKey}', this.value)" class="appearance-none bg-subtle-fill hover:bg-subtle-border text-ink-secondary text-xs font-mono py-1 pl-2 pr-6 rounded cursor-pointer outline-none transition-colors border border-subtle-border">
-                        ${options}
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 text-ink-secondary">
-                        <svg class="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                    </div>
-                </div>
-             `;
-        };
 
         const planData = app.state.activePlanData;
 
@@ -505,9 +419,6 @@ const app = {
                 <!-- Main Title & Meta -->
                 <div class="mb-12">
                     <h2 class="text-[40px] leading-[1.1] font-bold font-serif text-ink tracking-tight">${planData.title}</h2>
-                    <div class="flex items-center gap-3 mt-4">
-                         ${renderVersionSelector()}
-                    </div>
                      ${planData.execution_notes ? `
                         <div class="mt-8 p-6 bg-subtle-fill border border-subtle-border rounded-xl">
                              <div class="font-bold flex items-center gap-2 mb-3 text-ink">

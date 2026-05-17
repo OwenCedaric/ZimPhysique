@@ -33,33 +33,28 @@ This application manages and displays workout plans. It uses **Vite**, **Tailwin
 *   **PWA**: Offline support via `vite-plugin-pwa`.
 *   **Vanilla JS**: Core logic (`app.js`) without heavy UI frameworks.
 
-## 📂 Data Structure & Versioning
+## 📂 Data Structure & Git Versioning
 
 Workout data is stored in the `data/` directory. The app **automatically detects** these files. There is no central manifest file.
 
 ### How it Works
-The app scans `data/*.json`. It parses filenames to determine the **Day** and **Version**.
+The app scans `data/*.json`. It maps each filename directly to a training plan for that day.
 
-**Filename Format**: `[day_key]_v[version_number].json`
+**Filename Format**: `[day_key].json`
 
 Examples:
-*   `monday_v1.json` -> Day: Monday, Version: 1
-*   `upper_v2.json` -> Day: Upper, Version: 2
-*   `daily_v1.json` -> **Special**: "Daily Posture Correction" routine (always pinned to top)
+*   `monday.json` -> Day: Monday
+*   `daily.json` -> **Special**: "Daily Posture Correction" routine (always pinned to top)
 
-### Adding a New Version
-To add a new workout plan or version, **simply create a new JSON file**:
-
-1.  Create `data/monday_v2.json`.
-2.  The app will automatically detect it, add it to the "Monday" group, and set it as the active version if it's the latest.
+### Version Updates via Git
+Version tracking is entirely handled through Git. Rather than creating new files with version suffixes (e.g. `monday_v2.json`), modifications are made directly to the primary day-specific files. Git history preserves past versions, and only the latest state is displayed in the application.
 
 ### JSON Format
 Each file should follow this structure:
 
 ```json
 {
-  "id": "monday_v2",     // Unique ID for this specific file version
-  "version": 2,          // Integer
+  "id": "module_a1_upper_chest_mid_delt",
   "title": "Upper Body Strength",
   "sections": {
     "warmup": [ ... ],   // Array of exercises
