@@ -7,9 +7,9 @@ export default defineConfig({
             registerType: 'autoUpdate',
             includeAssets: ['favicon.png', 'pwa-icon-512.png'],
             manifest: {
-                name: 'ZimPhysique Training',
-                short_name: 'ZimPhysique',
-                description: 'ZimPhysique Training App',
+                name: 'Steve Zim Physique',
+                short_name: 'Steve Zim Physique',
+                description: 'Steve Zim Physique Training App',
                 theme_color: '#1a1a1a',
                 background_color: '#fbf9f6',
                 display: 'standalone',
