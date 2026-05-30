@@ -13,10 +13,11 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="apple-touch-icon" href="/pwa-icon-512.png">
     <link rel="manifest" href="./manifest.webmanifest">
-    <!-- Updated theme color to Chronicle Ink -->
-    <meta name="theme-color" content="#1a1a1a">
+    <!-- Adaptive theme colors for iOS PWA Status Bar -->
+    <meta name="theme-color" content="#fbf9f6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1c1f26" media="(prefers-color-scheme: dark)">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head>
 
 <body class="bg-surface text-ink min-h-screen font-sans antialiased">
