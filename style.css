@@ -86,22 +86,13 @@ h6 {
     font-weight: 600;
 }
 
-/* Custom Scrollbar for hidden feel */
 ::-webkit-scrollbar {
-    width: 6px;
+    display: none;
 }
 
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--color-subtle-border);
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--color-stroke-tint);
+* {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -116,7 +107,8 @@ h6 {
 
 
 .hollow-watermark {
-    color: var(--color-ink); /* Fallback */
+    color: var(--color-ink);
+    /* Fallback */
     -webkit-text-fill-color: var(--color-surface);
     -webkit-text-stroke: 1px var(--color-ink);
     paint-order: stroke fill;
@@ -185,21 +177,4 @@ h6 {
 .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-}
-
-.learning-content::-webkit-scrollbar {
-    width: 4px;
-}
-
-.learning-content::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.learning-content::-webkit-scrollbar-thumb {
-    background: var(--color-subtle-border);
-    border-radius: 10px;
-}
-
-.learning-content::-webkit-scrollbar-thumb:hover {
-    background: var(--color-ink-secondary);
 }
