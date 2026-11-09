@@ -1,0 +1,92 @@
+id: zim_12week_master_plan
+version: 1
+title: Steve Zim 12周形体雕刻与重塑方案
+subtitle: 修复姿态链 · 建立神经肌肉连接 · 打造倒三角轮廓
+program_period: 第一阶段 12 周（地基修复期）
+frequency: 每周 4 天力量训练 + 1 天主动恢复 + 每日体态矫正
+core_philosophy: 肌肉孤立 + 消除辅助肌群 + 受张时间最大化 (TUT) + 战术性运动范围
+
+current_phase:
+  phase: 1
+  name: 地基修复与神经重构期 (第 1-4 周)
+  duration: 4 周
+  core_goals:
+    - 骨盆中立位重置：消除骨盆前倾，激活抑制的臀大肌与腹横肌
+    - 受张时间 (TUT) 神经通路建立：全程 4-2-2-1 慢离心，消除惯性借力
+    - 倒三角轮廓塑形：锁定上胸 60% 充血，加宽三角肌中束，收紧核心腰线
+
+weekly_volume_targets:
+  chest:
+    total_sets: 16
+    distribution: 周一 A1 上胸 8 组 + 周四 A2 补充 8 组
+    ratio: 上胸 60% | 中下胸 40%
+  back:
+    total_sets: 16
+    distribution: 周二 B1 宽度 8 组 + 周六 B2 厚度 8 组
+    ratio: 背阔肌宽度 40% | 三角肌后束+中束 40% | 上背厚度 20%
+  shoulders:
+    total_sets: 14
+    distribution: 中束 8 组 + 后束 6 组
+    focus: 消除溜肩，拉宽锁骨视觉宽度
+  legs_core:
+    total_sets: 12
+    distribution: 周三 C 臀腿核心 12 组
+    focus: 臀大肌激活 + 腘绳肌离心 + 腹横肌抗伸展
+  posture:
+    frequency: 每日强制执行 (15-20 分钟)
+    focus: 死虫式 + 90/90 髋屈肌拉伸 + 肩袖外旋激活
+
+weekly_schedule:
+  daily:
+    day_name: 每日必做
+    title: 每日强制体态矫正序列
+    tag: 姿态地基
+    role: 骨盆后倾重置 + 肩袖激活 + 核心深层神经唤醒（优先级高于力量训练）
+  monday:
+    day_name: 周一
+    title: 模块 A1：上胸饱满 + 肩部加宽
+    tag: 胸主导 + 肩中束
+    target_ratio: 上胸 60% | 肩中束主导 | 核心稳定贯穿全程
+    fatigue_target: RIR = 1-2
+  tuesday:
+    day_name: 周二
+    title: 模块 B1：肩背立体 + 倒三角雕刻
+    tag: 背阔肌宽度 + 后束
+    target_ratio: 背阔肌宽度 40% | 三角肌后束+中束 40% | 上背厚度 20%
+    fatigue_target: RIR = 1-2
+  wednesday:
+    day_name: 周三
+    title: 模块 C：下肢塑形 + 臀部激活 + 核心抗伸展
+    tag: 臀腿塑形 + 核心
+    target_ratio: 臀大肌激活 40% | 股四头肌/腘绳肌 30% | 深层核心抗伸展 30%
+    fatigue_target: RIR = 2
+  thursday:
+    day_name: 周四
+    title: 模块 A2：上胸强化 + 手臂塑形 + 侧腹收紧
+    tag: 周容量补全 + 手臂
+    target_ratio: 上胸周容量补全 (35%) | 手臂孤立 (40%) | 侧腹收紧 (25%)
+    fatigue_target: RIR = 1
+  friday:
+    day_name: 周五
+    title: 模块 D：主动恢复 + 筋膜整合 + 活动度重建
+    tag: 主动恢复 + 减压
+    target_ratio: 筋膜链整合 40% | 关节活动度 30% | 神经系统重置 30%
+    fatigue_target: RPE < 4（无抗阻力竭）
+  saturday:
+    day_name: 周六
+    title: 模块 B2：背部厚度 + 倒三角强化 + 姿态巩固
+    tag: 背部厚度 + 姿态链
+    target_ratio: 背部厚度 45% | 姿态链锁定 35% | 肩胛骨后缩强化 20%
+    fatigue_target: RIR = 1
+  sunday:
+    day_name: 周日
+    title: 全面休整与营养超补偿
+    tag: 彻底休息
+    target_ratio: 神经系统修复 100%
+    fatigue_target: 无训练
+
+calibration_rules:
+  - 跨日容量补偿：若周一 A1 胸部因肩部代偿或提前力竭欠量 >= 2 组，将欠缺容量在周四 A2 上斜哑铃动作中平摊吸收。
+  - 关节优先原则：若某关节（如腕、肩、膝）产生压迫性刺痛，严禁强行冲重量，优先替换为同力线绳索或哑铃孤立变式。
+  - 体态前置法则：每日体态矫正序列为所有力量训练的前提，若当日骨盆前倾未纠偏或肩袖未唤醒，力量训练负荷自动下调 15%。
+  - 渐进超负荷标准：每 2-3 周评估一次负荷，只有在完全保持 4-2-2-1 慢离心且无任何代偿的前提下，方可增加 1-2kg。

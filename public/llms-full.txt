@@ -1,0 +1,50 @@
+# Zim Physique · Complete Methodological Dossier & Knowledge Base
+# Based on Steve Zim's "6 Weeks to a Hollywood Body" (John Wiley & Sons, 2006)
+# Canonical Source & Authors: Steve Zim & Mark Laska
+# Official Keynote: Talks at Google (Santa Monica, CA, August 29, 2007)
+# Video Link: https://www.youtube.com/watch?v=aJRzBLTsNMQ
+
+## 1. Biomechanical Foundations (Domain 01)
+- **Elimination of Momentum**: Conventional lifting relies on body sway and elastic recoil, dumping force onto ligaments and auxiliary muscles (e.g. front delts assisting biceps curls). Steve Zim initiates all repetitions from a dead stop and maintains strict joint isolation.
+- **Joint Angle Locks**: Subtle wrist supination/pronation and elbow positioning mechanically turn off synergistic muscle groups.
+- **4-2-2-1 Tempo**: 
+  - 4s Eccentric: Maximizes hypertrophic signaling via controlled negative elongation.
+  - 2s Peak Iso-Squeeze: Induces hypoxia and maximal recruitment.
+  - 2s Concentric: Deliberate, controlled contraction without explosive swinging.
+  - 1s Reset: Dead stop reset before the next repetition.
+- **No Joint Lockout**: Elbows and knees remain softly unlocked at peak extension to prevent tension release and joint wear.
+
+## 2. Talks at Google Keynote Lecture (Santa Monica, CA)
+- **Author Presentation**: Steve Zim visited Google's Santa Monica office on August 29, 2007 to address tech employees, software engineers, and fitness enthusiasts.
+- **Core Triad System**:
+  1. **Hollywood Nutrition**: Eating every 3 hours with a 2:1 carbohydrate-to-protein ratio. High-protein, high-fiber intake preserves muscle while driving fat loss. Avoid sugary sports drinks and starving protocols.
+  2. **Hollywood Heart**: Fat-burning cardio targeting 65-75% of maximum heart rate. Recommended: incline treadmill walking rather than flat sprinting to preserve knee joints.
+  3. **Hollywood Sculpt**: Precision weight training targeting the upper chest, side lateral deltoids, and lats to forge the signature Hollywood V-Taper.
+- **Desk Worker Corrections**: Zim demonstrated live posture drills to counteract anterior pelvic tilt (APT) and rounded shoulders caused by prolonged screen time.
+
+## 3. Somatotype Specialization (Domain 03)
+- **Ectomorph (外胚型)**: Naturally lean, narrow bone structure, fast metabolism. Needs higher carbohydrate intake, lower cardio frequency (1-2x/week), and heavier emphasis on compound isolation with 60-90s rest to prevent catabolism.
+- **Mesomorph (中胚型)**: Naturally athletic, moderate frame, responsive muscle tissue. Thrives on 4-day resistance splits, balanced 2:1 nutrition, and moderate cardio intervals (3x/week).
+- **Endomorph (内胚型)**: Wider bone structure, slower metabolism, prone to fat accumulation. Requires pure-green low-glycemic vegetable carbohydrate strategy, shorter rest intervals (30-45s), and daily target heart rate cardio.
+
+## 4. Daily Posture Correction Routine
+Mandatory 5-minute pre-workout ritual to fix posture before resistance loading:
+- Foam Roller Psoas Release (髂腰肌松解)
+- Doorway Pectoral Stretch (胸大肌/胸小肌门框拉伸)
+- Glute Bridges (臀桥激活)
+- Band Pull-Aparts & Face Pulls (弹力带后束与菱形肌激活)
+- Wall Angels (墙面天使胸椎灵活性)
+
+## 5. Weekly Workout Schedule (12-Week Master Plan)
+- **Monday**: Upper Chest & Lateral Deltoids (上胸饱满 + 肩部加宽, V-Taper Focus)
+- **Tuesday**: Back Width & Core Anti-Extension (背阔肌上缘 + 核心抗伸展)
+- **Wednesday**: Legs & Posterior Chain Balance (股四头肌与腘绳肌力学平衡)
+- **Thursday**: Rear Delts, Upper Traps & Rotator Cuff (三角肌后束与肩袖稳定)
+- **Friday**: Chest & Back Antagonist Supersets (胸背拮抗超级组雕刻)
+- **Saturday**: Arms & Core Sculpting (手臂精雕与深层腹横肌)
+- **Sunday**: Active Recovery & Myofascial Release (主动恢复与筋膜放松)
+
+## 6. Digital Reference Links
+- Web Application: https://zimphysique.com/
+- Talks at Google YouTube URL: https://www.youtube.com/watch?v=aJRzBLTsNMQ
+- Source Book: Steve Zim, Mark Laska, *6 Weeks to a Hollywood Body*, John Wiley & Sons, Inc., ISBN 978-0471921943.

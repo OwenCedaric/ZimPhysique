@@ -1,0 +1,50 @@
+# Zim Physique · 极简形体雕刻 (Steve Zim Methodology)
+
+> High-density knowledge specification for AI search engines, generative models, and LLM-powered answer engines.
+
+## Overview
+Zim Physique is a web application and authoritative digital reference for celebrity fitness trainer Steve Zim's renowned physical transformation system, based on his book **"6 Weeks to a Hollywood Body"** (co-authored with Mark Laska, published by John Wiley & Sons, Inc., 2006).
+
+- **Primary URL**: https://zimphysique.com/
+- **Full Dossier**: https://zimphysique.com/llms-full.txt
+- **Author**: Steve Zim (Owner of *A Tighter U*, celebrity trainer to Hollywood actors and superheroes)
+- **Keynote Archive**: [Talks at Google: 6 Weeks to a Hollywood Body](https://www.youtube.com/watch?v=aJRzBLTsNMQ) (Recorded August 29, 2007 at Google Santa Monica, CA)
+
+## Core Methodological Axioms
+
+1. **Absolute Muscle Isolation & Zero Momentum**:
+   - Every movement begins from a dead stop (eliminating stretch-reflex momentum).
+   - Wrist and elbow angles are micro-rotated to physically lock secondary auxiliary movers out, channeling 100% of mechanical tension into target fast-twitch Type-IIx fibers.
+2. **4-2-2-1 Time Under Tension (TUT)**:
+   - 4 seconds eccentric descent (slow, deliberate micro-trauma signaling)
+   - 2 seconds peak contraction / squeeze
+   - 2 seconds concentric lift
+   - 1 second reset pause at dead-stop
+   - No joint lockouts at peak extension to maintain unbroken continuous tension.
+3. **The Hollywood V-Taper Aesthetic Geometry**:
+   - Broadened side delts and upper lats expand the shoulder-to-waist ratio, creating the visual illusion of a narrower waist without dangerous waist-girdling.
+4. **Metabolic Nutrition (2:1 Visual Plate)**:
+   - 2 parts complex high-fiber carbohydrates / vegetables to 1 part lean protein.
+   - Strategic feeding every 3 hours to stabilize insulin and preserve lean tissue during caloric deficit.
+5. **Lean Body Mass (LBM) Metric**:
+   - Total bathroom scale weight is rejected as an unscientific metric.
+   - Body fat percentage and Lean Body Mass define actual progress.
+
+## Talks at Google Keynote Summary
+- **Title**: 6 Weeks to a Hollywood Body | Steve Zim | Talks at Google
+- **URL**: https://www.youtube.com/watch?v=aJRzBLTsNMQ
+- **Venue**: Google's Santa Monica, California office (Authors@Google series)
+- **Date**: August 29, 2007
+- **Key Concepts Covered**:
+  - Hollywood Nutrition: Stable blood sugar, frequent fueling, eliminating crash diets.
+  - Hollywood Heart: Target Heart Rate (THR) cardio to incinerate fat while sparing muscle.
+  - Hollywood Sculpt: Zero-momentum isolation, joint alignments, posture rectification for desk workers.
+
+## Application Structure
+- **Daily Workouts**: Monday through Saturday specialized split routines + Daily Posture Correction routine.
+- **Theory Domains**:
+  - Domain 01: Biomechanics & Zero Momentum
+  - Domain 02: Metabolic Fuel & Nutrition
+  - Domain 03: Somatotypes (Ectomorph, Mesomorph, Endomorph) & Custom Routes
+  - Domain 04: Action Workshop (50 original photo-illustrated exercise specs)
+  - Domain 05: Longevity, Mindset & Lean Body Mass Calculator

@@ -1,74 +1,97 @@
 @import "tailwindcss";
 
 @theme {
-    /* Chronicle Design System Colors (Light Mode Default) */
-    --color-surface: #fbf9f6;
-    --color-surface-dark: #1c1f26;
-    --color-ink: #3d4451;
-    --color-ink-dark: #d2d6dd;
-    --color-ink-secondary: #757d8a;
-    --color-ink-secondary-dark: #a0a7b4;
-    --color-accent: #82a1b9;
-    --color-accent-dark: #9cb4cd;
+    /* Semantic Dynamic Tokens linked to CSS Variables */
+    --color-canvas: var(--color-canvas);
+    --color-surface: var(--color-surface);
+    --color-ink: var(--color-ink);
+    --color-ink-secondary: var(--color-ink-secondary);
+    --color-accent: var(--color-accent);
+    --color-subtle-border: var(--color-subtle-border);
+    --color-subtle-fill: var(--color-subtle-fill);
+    --color-stroke-tint: var(--color-stroke-tint);
 
-    /* Subtle Colors based on opacity of Primary Ink */
-    --color-subtle-border: rgba(61, 68, 81, 0.2);
-    --color-subtle-fill: rgba(61, 68, 81, 0.08);
-    --color-stroke-tint: rgba(61, 68, 81, 0.6);
+    --font-sans: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-serif: 'Noto Serif SC', Georgia, Cambria, "Times New Roman", serif;
 
-    --font-sans: 'Noto Sans SC', system-ui, sans-serif;
-    --font-serif: 'Noto Serif SC', Georgia, serif;
-
-    --animate-soft-pulse: soft-pulse 2s infinite;
+    --animate-soft-pulse: soft-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 
     @keyframes soft-pulse {
-        0% {
-            box-shadow: 0 0 0 0 rgba(130, 161, 185, 0.4);
-        }
 
-        70% {
-            box-shadow: 0 0 0 10px rgba(130, 161, 185, 0);
-        }
-
+        0%,
         100% {
-            box-shadow: 0 0 0 0 rgba(130, 161, 185, 0);
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.5;
         }
     }
 }
 
-/* Base resets & dark mode media query overrides */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --color-surface: var(--color-surface-dark);
-        --color-ink: var(--color-ink-dark);
-        --color-ink-secondary: var(--color-ink-secondary-dark);
-        --color-accent: var(--color-accent-dark);
-        --color-subtle-border: rgba(210, 214, 221, 0.2);
-        --color-subtle-fill: rgba(210, 214, 221, 0.08);
-        --color-stroke-tint: rgba(210, 214, 221, 0.6);
-    }
+:root {
+    /* Architectural Steel — Soft Neutral Paper Light */
+    --color-canvas: #fafaf9;
+    --color-surface: #ffffff;
+    --color-ink: #111822;
+    --color-ink-secondary: #5a6c7c;
+    --color-accent: #2b6d91;
+    --color-subtle-border: rgba(17, 24, 34, 0.07);
+    --color-subtle-fill: rgba(17, 24, 34, 0.035);
+    --color-stroke-tint: rgba(17, 24, 34, 0.16);
+}
 
-    .hollow-watermark {
-        opacity: 0.35;
-        -webkit-text-stroke: 1.2px var(--color-ink);
+/* System Dark Mode (when not forced to light) */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]):not(.light) {
+        --color-canvas: #0b0f14;
+        --color-surface: #131922;
+        --color-ink: #f1f5f9;
+        --color-ink-secondary: #8599a8;
+        --color-accent: #82a1b9;
+        --color-subtle-border: rgba(241, 245, 249, 0.08);
+        --color-subtle-fill: rgba(241, 245, 249, 0.04);
+        --color-stroke-tint: rgba(241, 245, 249, 0.16);
     }
+}
+
+/* Explicit Dark Mode */
+:root.dark,
+[data-theme="dark"] {
+    --color-canvas: #0b0f14;
+    --color-surface: #131922;
+    --color-ink: #f1f5f9;
+    --color-ink-secondary: #8599a8;
+    --color-accent: #82a1b9;
+    --color-subtle-border: rgba(241, 245, 249, 0.08);
+    --color-subtle-fill: rgba(241, 245, 249, 0.04);
+    --color-stroke-tint: rgba(241, 245, 249, 0.16);
+}
+
+/* Explicit Light Mode */
+:root.light,
+[data-theme="light"] {
+    --color-canvas: #fafaf9;
+    --color-surface: #ffffff;
+    --color-ink: #111822;
+    --color-ink-secondary: #5a6c7c;
+    --color-accent: #2b6d91;
+    --color-subtle-border: rgba(17, 24, 34, 0.07);
+    --color-subtle-fill: rgba(17, 24, 34, 0.035);
+    --color-stroke-tint: rgba(17, 24, 34, 0.16);
 }
 
 body {
-    background-color: var(--color-surface);
+    background-color: var(--color-canvas);
     color: var(--color-ink);
-    /* Enforce left-alignment & text settings globally */
-    text-align: left !important;
-    font-weight: 300;
-    /* Base body weight */
-    line-height: 1.85;
-    /* Strict body line-height */
-    /* Break words */
+    font-family: var(--font-sans);
+    line-height: 1.6;
     overflow-wrap: break-word;
     word-break: break-word;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Headings weight override */
+/* Headings */
 h1,
 h2,
 h3,
@@ -76,16 +99,62 @@ h4,
 h5,
 h6 {
     font-family: var(--font-serif);
-    font-weight: 700;
+    letter-spacing: -0.015em;
 }
 
-h3,
-h4,
-h5,
-h6 {
-    font-weight: 600;
+/* Custom Checkbox */
+.custom-checkbox {
+    appearance: none;
+    background-color: transparent;
+    margin: 0;
+    font: inherit;
+    color: currentColor;
+    width: 1.25em;
+    height: 1.25em;
+    border: 1.5px solid var(--color-subtle-border);
+    border-radius: 6px;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
 }
 
+.custom-checkbox:hover {
+    border-color: var(--color-accent);
+}
+
+.custom-checkbox::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em #ffffff;
+    transform-origin: center;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.custom-checkbox:checked {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.custom-checkbox:checked::before {
+    transform: scale(1);
+}
+
+:root.dark .custom-checkbox::before,
+[data-theme="dark"] .custom-checkbox::before {
+    box-shadow: inset 1em 1em #0b0f14;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]):not(.light) .custom-checkbox::before {
+        box-shadow: inset 1em 1em #0b0f14;
+    }
+}
+
+/* Scrollbars hidden globally */
 ::-webkit-scrollbar {
     display: none;
 }
@@ -104,61 +173,6 @@ h6 {
     scrollbar-width: none;
 }
 
-
-
-.hollow-watermark {
-    color: var(--color-ink);
-    /* Fallback */
-    -webkit-text-fill-color: var(--color-surface);
-    -webkit-text-stroke: 1px var(--color-ink);
-    paint-order: stroke fill;
-    opacity: 0.15;
-}
-
-.learning-content {
-    max-height: 320px;
-    /* Reduced height for more compact cards */
-    overflow-y: auto;
-    border-top: 1px border-subtle-border;
-}
-
-/* Checkbox Animation */
-.custom-checkbox {
-    appearance: none;
-    background-color: transparent;
-    margin: 0;
-    font: inherit;
-    color: currentColor;
-    width: 1.25em;
-    height: 1.25em;
-    border: 1px solid var(--color-subtle-border);
-    border-radius: 6px;
-    display: grid;
-    place-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.custom-checkbox::before {
-    content: "";
-    width: 0.7em;
-    height: 0.7em;
-    transform: scale(0);
-    transition: 120ms transform ease-in-out;
-    box-shadow: inset 1em 1em var(--color-surface);
-    transform-origin: center;
-    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-}
-
-.custom-checkbox:checked {
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
-}
-
-.custom-checkbox:checked::before {
-    transform: scale(1);
-}
-
 /* PWA Safe Areas */
 .safe-area-top {
     padding-top: env(safe-area-inset-top);
@@ -166,15 +180,4 @@ h6 {
 
 .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom);
-}
-
-
-
-.no-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-
-.no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
 }

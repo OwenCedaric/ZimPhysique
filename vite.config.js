@@ -1,48 +1,46 @@
 import { defineConfig } from 'vite';
-import { VitePWA } from 'vite-plugin-pwa';
+import YAML from 'yaml';
+import { getSiteUrl } from './site.config.js';
+import { generateSeoFiles } from './scripts/generate-seo.js';
+
+function yamlPlugin() {
+    return {
+        name: 'vite:yaml',
+        transform(code, id) {
+            if (id.endsWith('.yaml') || id.endsWith('.yml')) {
+                const parsed = YAML.parse(code);
+                return {
+                    code: `export default ${JSON.stringify(parsed)};`,
+                    map: null
+                };
+            }
+        }
+    };
+}
+
+function seoPlugin() {
+    return {
+        name: 'vite:seo',
+        buildStart() {
+            generateSeoFiles();
+        },
+        transformIndexHtml(html) {
+            const siteUrl = getSiteUrl();
+            const canonicalMatch = html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i);
+            if (canonicalMatch && canonicalMatch[1]) {
+                const currentUrl = canonicalMatch[1].replace(/\/+$/, '');
+                if (currentUrl !== siteUrl) {
+                    return html.replaceAll(currentUrl, siteUrl);
+                }
+            }
+            return html;
+        }
+    };
+}
 
 export default defineConfig({
     plugins: [
-        VitePWA({
-            registerType: 'autoUpdate',
-            includeAssets: ['favicon.png', 'pwa-icon-512.png'],
-            manifest: {
-                name: 'Steve Zim Physique',
-                short_name: 'Steve Zim Physique',
-                description: 'Steve Zim Physique Training App',
-                theme_color: '#1a1a1a',
-                background_color: '#fbf9f6',
-                display: 'standalone',
-                icons: [
-                    {
-                        src: 'pwa-icon-512.png',
-                        sizes: '512x512',
-                        type: 'image/png',
-                        purpose: 'any maskable'
-                    },
-                    {
-                        src: 'favicon.png',
-                        sizes: '192x192',
-                        type: 'image/png'
-                    }
-                ]
-            },
-            workbox: {
-                // Cache external APIs or other runtime routes if needed
-                runtimeCaching: [
-                    {
-                        urlPattern: ({ url }) => url.pathname.startsWith('/data/'),
-                        handler: 'StaleWhileRevalidate',
-                        options: {
-                            cacheName: 'api-data',
-                            expiration: {
-                                maxEntries: 50,
-                                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 Days
-                            }
-                        }
-                    }
-                ]
-            }
-        })
+        yamlPlugin(),
+        seoPlugin()
     ]
 });

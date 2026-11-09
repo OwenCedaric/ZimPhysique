@@ -1,0 +1,20 @@
+with open('book/chapters/ch04.js', 'r', encoding='utf-8') as f:
+    text = f.read()
+
+target = '''            content: {
+                zh: "为了确保每一次有氧训练都精准落在燃脂效率最高的区间，必须按照以下公式设定个人心率阈值：\\n\\n1. **测定最大心率 (MHR)**：`220 - 你的年龄`\\n2. **燃脂区间下限 (65% 强度)**：`MHR × 0.65`（诱导线粒体脂肪酶激活的最低有效强度）\\n3. **燃脂区间上限 (85% 强度)**：`MHR × 0.85`（无氧乳酸阈值门槛，超过此心率身体开始加速分解糖原）\\n\\n• **计算范例（以 30 岁为例）**：\\n最大心率 = `220 - 30 = 190 次/分钟`\\n心肺燃脂底线 = `190 × 0.65 = 124 次/分钟`\\n心肺安全天花板 = `190 × 0.85 = 162 次/分钟`\\n只要在运动中将心率保持在 **124 ~ 162 次/分钟**，你的身体就在以最高比例调动全身脂肪供能！",
+                en: "To ensure every cardiovascular session stays laser-focused on maximal lipolysis, calculate your personal threshold:\\n\\n1. **Determine Maximum Heart Rate (MHR)**: `220 - Age`\\n2. **Lower Fat-Burning Bound (65%)**: `MHR × 0.65` (Minimum threshold stimulating mitochondrial lipase)\\n3. **Upper Aerobic Ceiling (85%)**: `MHR × 0.85` (Lactate threshold; exceeding this burns glycogen and catabolizes muscle)\\n\\n• **Example Calculation (30-year-old)**:\\nMax Heart Rate = `220 - 30 = 190 bpm`\\nFat Burn Floor = `190 × 0.65 = 124 bpm`\\nAerobic Ceiling = `190 × 0.85 = 162 bpm`\\nMaintain heart rate between **124 and 162 bpm** throughout your session for pure fat oxidation!"
+            }'''
+
+replacement = '''            content: {
+                zh: "为了确保每一次有氧训练都精准落在燃脂效率最高的区间，必须按照以下公式设定个人心率阈值：\\n\\n1. **测定最大心率 (MHR)**：`220 - 你的年龄`\\n2. **有氧燃脂黄金区间 (60% ~ 80% / 65% ~ 85%)**：\\n   - 燃脂下限：`MHR × 0.65`（诱导线粒体脂肪酶激活的最低有效强度）\\n   - 燃脂上限：`MHR × 0.85`（超过此强度身体开始迅速分解肌糖原）\\n3. **无氧极限警戒线 (90% 强度)**：`MHR × 0.90`（在此强度下，人体通常只能维持 10 秒左右便会力竭停顿）。\\n\\n• **测算范例（以 40 岁原书案例）**：\\nMHR = `220 - 40 = 180 次/分`，有氧理想区间 = `108 ~ 144 次/分` (60%~80%)，进阶区间 = `117 ~ 153 次/分` (65%~85%)，无氧极限 = `162 次/分` (90%)。\\n\\n• **Steve Zim 权威徒手脉搏测量规范 (原书第 50 页)**：\\n  - **测点一：手腕桡动脉**：前臂与手掌连接处内侧，用食指与中指指腹轻压（**严禁用大拇指！大拇指自带动脉脉搏，会导致读数严重失真**）。\\n  - **测点二：颈部颈动脉**：喉结旁开、前颈肌内侧凹陷处。\\n  - **计数法则**：凝视秒表，精准计数 **15 秒** 的心跳次数，然后 **乘以 4** 即为每分钟心率（BPM）；也可选用胸带式心率表，实现运动中抬腕即读。\\n\\n• **好莱坞坡度变速走黄金军规 (Walking Guidelines)**：\\n  - **严禁抓握跑步机扶手**：双手扶住面板或侧扶手会卸去 25%~30% 的身体自重，摧毁核心与臀肌做功！双臂必须像户外自然摆臂般自由摆动。\\n  - **参数设置**：坡度 **8% ~ 15%**，速度 **3.5 ~ 4.2 英里/小时 (约 5.5 ~ 6.8 公里/小时)**，单次时长 **20 ~ 35 分钟**。",
+                en: "To ensure every cardiovascular session stays laser-focused on maximal lipolysis, calculate your personal threshold:\\n\\n1. **Determine Maximum Heart Rate (MHR)**: `220 - Age`\\n2. **Aerobic Fat-Burning Window (60%-80% / 65%-85%)**:\\n   - Lower Bound: `MHR × 0.65` (Minimum threshold stimulating mitochondrial lipase)\\n   - Upper Bound: `MHR × 0.85` (Lactate ceiling; exceeding this consumes glycogen)\\n3. **Anaerobic Threshold (90% MHR)**: `MHR × 0.90` (Sustainable for a maximum of 10 seconds before total exhaustion).\\n\\n• **Original Book Example (40-year-old)**:\\nMHR = `220 - 40 = 180 bpm`, Ideal Zone = `108 - 144 bpm` (60%-80%), Advanced Zone = `117 - 153 bpm` (65%-85%), Anaerobic Cap = `162 bpm` (90%).\\n\\n• **Steve Zim's Manual Pulse Protocol (Page 50)**:\\n  - **Location 1: Radial Artery (Wrist)**: Inside edge of wrist tendon using pointer and middle fingers (**NEVER use the thumb, as the thumb has its own arterial pulse that invalidates readings**).\\n  - **Location 2: Carotid Artery (Neck)**: Alongside trachea under the jawline.\\n  - **Count Cadence**: Count heartbeats for **15 seconds** and **multiply by 4** for BPM (or wear a chest strap monitor).\\n\\n• **Hollywood Incline Walking Rules (Page 84)**:\\n  - **NEVER Grip the Console Rails**: Holding handrails unloads 25%-30% of bodyweight, robbing glutes and core of stabilization! Swing arms freely like power walking.\\n  - **Parameters**: Incline **8% to 15%**, speed **3.5 to 4.2 mph (5.5 to 6.8 km/h)**, duration **20 to 35 minutes**."
+            }'''
+
+new_text = text.replace(target, replacement)
+if new_text != text:
+    with open('book/chapters/ch04.js', 'w', encoding='utf-8') as f:
+        f.write(new_text)
+    print("Updated book/chapters/ch04.js successfully")
+else:
+    print("Could not find target in ch04.js")
